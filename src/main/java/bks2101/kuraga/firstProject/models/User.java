@@ -1,7 +1,8 @@
 package bks2101.kuraga.firstProject.models;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,13 +16,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String username;
     private String password;
     private String email;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @Fetch(FetchMode.JOIN)
     private Set<Role> roles = new HashSet<>();
     public Long getId() {
         return id;
@@ -31,16 +33,16 @@ public class User {
         return email;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
     public void setEmail(String email)
     {
@@ -65,7 +67,7 @@ public class User {
     public User() {}
     public User(String username, String email, String password) {
         super();
-        this.name = username;
+        this.username = username;
         this.email = email;
         this.password = password;
     }
