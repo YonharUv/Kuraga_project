@@ -25,6 +25,10 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
 
+    public SecurityConfig() {
+        userDetailsService = null;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
