@@ -15,6 +15,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name="Group")
 public class Group {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     @ManyToOne
     @JoinColumn(name = "curator_id", nullable = false)
