@@ -1,21 +1,13 @@
 package bks2101.kuraga.firstProject.models;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import java.util.HashSet;
-import java.util.Set;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
-@Setter
-@Getter
+@Builder
+@Data
 @AllArgsConstructor
-@Table(name = "users",
+@Table(name = "user",
 uniqueConstraints = {
         @UniqueConstraint(columnNames = "username"),
         @UniqueConstraint(columnNames = "email")
@@ -27,5 +19,5 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private ERole role;
+    private UserRole role;
 }
