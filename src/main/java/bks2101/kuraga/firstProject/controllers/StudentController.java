@@ -11,16 +11,16 @@ import java.util.List;
 
 @RestController
 public class StudentController {
-    private final StudentRepository repository;
+    private final StudentRepository studentRepository;
     public StudentController(StudentRepository repository) {
-        this.repository = repository;
+        this.studentRepository = repository;
     }
     @GetMapping("/students")
     List<Student> all() {
-        return repository.findAll();
+        return studentRepository.findAll();
     }
     @PostMapping("/students")
     Student newStudent(@RequestBody Student student) {
-        return repository.save(student);
+        return studentRepository.save(student);
     }
 }
