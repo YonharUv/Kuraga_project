@@ -21,4 +21,7 @@ public class Supervisor {
     private String personal_data;
     @OneToMany(mappedBy = "supervisor")
     private Set<Curator> curators;
+    public void addCurator(Curator curator) {
+        this.curators.add(curator);
+    }
 }
