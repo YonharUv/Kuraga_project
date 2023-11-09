@@ -1,10 +1,7 @@
 package bks2101.kuraga.firstProject.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -12,6 +9,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Setter
 @Getter
+@Data
 @AllArgsConstructor
 @Table(name="Student_Group")
 public class Group {
