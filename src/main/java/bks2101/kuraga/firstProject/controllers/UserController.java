@@ -3,7 +3,7 @@ package bks2101.kuraga.firstProject.controllers;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByIdException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
-import bks2101.kuraga.firstProject.models.User;
+import bks2101.kuraga.firstProject.models.ApplicationUser;
 import bks2101.kuraga.firstProject.models.UserRole;
 import bks2101.kuraga.firstProject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,19 +22,19 @@ public class UserController {
     ResponseEntity getAllUsers() {
         return ResponseEntity.ok(userRepository.findAll());
     }
-    @PostMapping("/users")
-    public ResponseEntity createUser(@RequestBody User user) throws UserAlreadyExistsException {
-        if (userRepository.existsByUsername(user.getUsername()) || userRepository.existsByEmail(user.getEmail())) {
-            throw new UserAlreadyExistsException(user.getEmail(), user.getUsername());
-        }
-        try {
-            user.setRole(UserRole.USER);
-            userRepository.save(user);
-            return ResponseEntity.ok("Пользователь успешно сохранен");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Произошла ошибка");
-        }
-    }
+//    @PostMapping("/users")
+//    public ResponseEntity createUser(@RequestBody ApplicationUser applicationUser) throws UserAlreadyExistsException {
+//        if (userRepository.existsByUsername(applicationUser.getUsername()) || userRepository.existsByEmail(applicationUser.getEmail())) {
+//            throw new UserAlreadyExistsException(applicationUser.getEmail(), applicationUser.getUsername());
+//        }
+//        try {
+//            applicationUser.setRoles(Set<Role>);
+//            userRepository.save(applicationUser);
+//            return ResponseEntity.ok("Пользователь успешно сохранен");
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body("Произошла ошибка");
+//        }
+//    }
     @GetMapping("/users/{id}")
     public ResponseEntity getUserById(@PathVariable Long id) throws UserNotFoundByIdException {
         if (!userRepository.existsById(id)) {
@@ -49,19 +49,19 @@ public class UserController {
         }
         return ResponseEntity.ok(userRepository.findByUsername(username));
     }
-    @PutMapping("/users/{id}")
-    public ResponseEntity<Optional<User>> exchangeUser(@RequestBody User newUser, @PathVariable Long id) throws UserNotFoundByIdException {
-        if (!userRepository.existsById(id)) {
-            throw new UserNotFoundByIdException(id);
-        }
-        return ResponseEntity.ok(userRepository.findById(id).map(user -> {
-            user.setUsername(newUser.getUsername());
-            user.setEmail(newUser.getEmail());
-            user.setPassword(newUser.getPassword());
-            user.setRole(UserRole.USER);
-            return userRepository.save(user);
-        }));
-    }
+//    @PutMapping("/users/{id}")
+//    public ResponseEntity<Optional<ApplicationUser>> exchangeUser(@RequestBody ApplicationUser newApplicationUser, @PathVariable Long id) throws UserNotFoundByIdException {
+//        if (!userRepository.existsById(id)) {
+//            throw new UserNotFoundByIdException(id);
+//        }
+//        return ResponseEntity.ok(userRepository.findById(id).map(applicationUser -> {
+//            applicationUser.setUsername(newApplicationUser.getUsername());
+//            applicationUser.setEmail(newApplicationUser.getEmail());
+//            applicationUser.setPassword(newApplicationUser.getPassword());
+//            applicationUser.setRole(UserRole.USER);
+//            return userRepository.save(applicationUser);
+//        }));
+//    }
     @DeleteMapping("/users/{id}")
     public ResponseEntity deleteUser(@PathVariable Long id) throws UserNotFoundByIdException {
         if (!userRepository.existsById(id)) {
