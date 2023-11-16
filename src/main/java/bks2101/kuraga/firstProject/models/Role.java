@@ -1,25 +1,26 @@
 package bks2101.kuraga.firstProject.models;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Entity
-@Table(name = "roles")
-@Data
-@NoArgsConstructor
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+@Getter
 @AllArgsConstructor
-@Builder
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Enumerated(EnumType.STRING)
-    private UserRole name;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "roles")
-    private Set<ApplicationUser> users;
+public enum Role {
+    USER(Set.of(Permission.USER)),
+    ADMIN(Set.of(Permission.ADMIN));
+    @Getter
+    private  final Set<Permission> permissions;
+    public List<SimpleGrantedAuthority> grantedAuthority() {
+        var authorities = getPermissions()
+                .stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+                .collect(Collectors.toList());
+        return authorities;
+    }
 }
