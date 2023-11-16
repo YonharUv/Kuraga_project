@@ -1,5 +1,6 @@
 package bks2101.kuraga.firstProject.config;
 
+import bks2101.kuraga.firstProject.models.Role;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.DialectOverride;
@@ -46,6 +47,7 @@ public class SecurityConfig  {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/auth").permitAll()
                         .requestMatchers("/registration").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
