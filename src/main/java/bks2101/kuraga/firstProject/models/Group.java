@@ -18,7 +18,7 @@ public class Group {
     private Long id;
     private String name;
     @ManyToOne
-    @JoinColumn(name = "curator_id", nullable = false)
+    @JoinColumn(name = "curator_id")
     private Curator curator;
     @OneToMany(mappedBy = "group")
     private Set<Student> students;
