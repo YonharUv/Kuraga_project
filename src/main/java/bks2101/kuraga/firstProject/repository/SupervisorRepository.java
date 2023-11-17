@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SupervisorRepository extends JpaRepository<Supervisor, Long> {
+    public Supervisor findByUsername(String username);
 }
