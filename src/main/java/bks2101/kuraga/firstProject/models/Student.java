@@ -19,10 +19,11 @@ public class Student {
     private String first_name;
     private String last_name;
     private String personal_data;
+    private String username;
     @ManyToOne
-    @JoinColumn(name = "curator_id", nullable = false)
+    @JoinColumn(name = "curator_id")
     private Curator curator;
     @ManyToOne
-    @JoinColumn(name = "group_id", nullable = false)
+    @JoinColumn(name = "group_id")
     private Group group;
 }
