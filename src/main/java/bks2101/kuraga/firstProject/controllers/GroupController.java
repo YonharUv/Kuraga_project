@@ -1,6 +1,5 @@
 package bks2101.kuraga.firstProject.controllers;
 
-import bks2101.kuraga.firstProject.exceptions.UserNotFoundByIdException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
 import bks2101.kuraga.firstProject.models.Group;
 import bks2101.kuraga.firstProject.repository.GroupRepository;
@@ -39,18 +38,18 @@ public class GroupController {
         }
         return ResponseEntity.ok(groupRepository.findByName(name));
     }
-    @PutMapping("/users/{name}")
-    public ResponseEntity<Optional<Group>> exchangeGroup(@RequestBody Group newGroup, @PathVariable String name) {
-        if (!groupRepository.existsByName(name)) {
-            ResponseEntity.badRequest().body("Группа " + name + " не существует");
-        }
-        return ResponseEntity.ok(groupRepository.findByName(name).map(group -> {
-            group.setName(newGroup.getName());
-            group.setCurator(newGroup.getCurator());
-            group.setMeetings(newGroup.getMeetings());
-            return groupRepository.save(group);
-        }));
-    }
+//    @PutMapping("/users/{name}")
+//    public ResponseEntity<Optional<Group>> exchangeGroup(@RequestBody Group newGroup, @PathVariable String name) {
+//        if (!groupRepository.existsByName(name)) {
+//            ResponseEntity.badRequest().body("Группа " + name + " не существует");
+//        }
+//        return ResponseEntity.ok(groupRepository.findByName(name).map(group -> {
+//            group.setName(newGroup.getName());
+//            group.setCurator(newGroup.getCurator());
+//            group.setMeetings(newGroup.getMeetings());
+//            return groupRepository.save(group);
+//        }));
+//    }
     @DeleteMapping("/users/{name}")
     public ResponseEntity deleteGroup(@PathVariable String name) {
         if (!groupRepository.existsByName(name)) {
