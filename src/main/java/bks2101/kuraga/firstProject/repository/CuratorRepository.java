@@ -11,4 +11,5 @@ public interface CuratorRepository extends JpaRepository<Curator, Long> {
     Optional<Curator> findById(Long id);
 
     Curator getById(Long id);
+    Curator findByUsername(String username);
 }
