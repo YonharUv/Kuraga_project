@@ -21,8 +21,9 @@ public class Curator {
     private String first_name;
     private String last_name;
     private String personal_data;
-    @ManyToOne
-    @JoinColumn(name="supervisor_id", nullable = false)
+    private String username;
+    @ManyToOne(optional = true)
+    @JoinColumn(name="supervisor_id")
     private Supervisor supervisor;
     @OneToMany(mappedBy = "curator")
     private Set<Student> students;
