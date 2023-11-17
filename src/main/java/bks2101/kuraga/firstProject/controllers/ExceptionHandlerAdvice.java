@@ -1,7 +1,7 @@
 package bks2101.kuraga.firstProject.controllers;
 
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
-import bks2101.kuraga.firstProject.exceptions.UserNotFoundByIdException;
+import bks2101.kuraga.firstProject.exceptions.NotFoundByIdException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 @Slf4j
 public class ExceptionHandlerAdvice {
-    @ExceptionHandler(UserNotFoundByIdException.class)
+    @ExceptionHandler(NotFoundByIdException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleUserNotFoundByIdException(UserNotFoundByIdException e) {
+    public ResponseEntity<String> handleUserNotFoundByIdException(NotFoundByIdException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());
