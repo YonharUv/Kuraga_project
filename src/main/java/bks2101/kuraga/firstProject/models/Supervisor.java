@@ -19,6 +19,7 @@ public class Supervisor {
     private String first_name;
     private String last_name;
     private String personal_data;
+    private String username;
     @OneToMany(mappedBy = "supervisor")
     private Set<Curator> curators;
     public void addCurator(Curator curator) {
