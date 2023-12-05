@@ -37,7 +37,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
     public ResponseEntity getUserByUsername(String username) throws UserNotFoundByUsernameException {
         if (!userRepository.existsByUsername(username)){
-            throw new UserNotFoundByUsernameException(username);
+            throw new UserNotFoundByUsernameException("Пользователя", username);
         }
         return ResponseEntity.ok(userRepository.findByUsername(username));
     }
