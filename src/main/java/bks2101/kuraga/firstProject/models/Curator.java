@@ -1,10 +1,7 @@
 package bks2101.kuraga.firstProject.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -14,6 +11,7 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 @Table(name="Curator")
+@Builder
 public class Curator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +19,15 @@ public class Curator {
     private String first_name;
     private String last_name;
     private String personal_data;
-    private String username;
+    private String email;
     @ManyToOne(optional = true)
     @JoinColumn(name="supervisor_id")
     private Supervisor supervisor;
     @OneToMany(mappedBy = "curator")
-    private Set<Student> students;
-    @OneToMany(mappedBy = "curator")
     private Set<Group> groups;
+    @OneToMany(mappedBy = "curator")
+    private  Set<Meeting> meetings;
+    public void AddMeetings(Meeting meeting) {
+        this.meetings.add(meeting);
+    }
 }
