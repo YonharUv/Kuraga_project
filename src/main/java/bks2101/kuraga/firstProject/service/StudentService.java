@@ -10,8 +10,6 @@ import bks2101.kuraga.firstProject.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 @Service
 @RequiredArgsConstructor
@@ -22,15 +20,15 @@ public class StudentService {
 
     public ResponseEntity createStudent(String authHeader, StudentDto studentDto) throws UserAlreadyExistsException {
         String jwtToken = authHeader.substring(7);
-        String username = jwtTokenUtils.getUsername(jwtToken);
-        if (studentRepository.existsByUsername(username)) {
-            throw new UserAlreadyExistsException("Студент", username);
+        String email = jwtTokenUtils.getUsername(jwtToken);
+        if (studentRepository.existsByEmail(email)) {
+            throw new UserAlreadyExistsException("Студент", email);
         }
         Student student = new Student();
         student.setFirst_name(studentDto.getFirst_name());
         student.setLast_name(studentDto.getLast_name());
         student.setPersonal_data(studentDto.getPersonal_data());
-        student.setUsername(username);
+        student.setEmail(email);
         studentRepository.save(student);
         return ResponseEntity.ok("Студент успешно создан");
     }
@@ -39,12 +37,6 @@ public class StudentService {
     }
 
     public ResponseEntity setStudentGroup(String authHeader, GroupDto groupName) throws UserAlreadyExistsException {
-        String jwtToken = authHeader.substring(7);
-        String username = jwtTokenUtils.getUsername(jwtToken);
-        Student student = studentRepository.findByUsername(username);
-        Group group = groupService.getGroupByName(groupName.getName());
-        student.setGroup(group);
-        student.setCurator(null);
-        return ResponseEntity.ok(studentRepository.save(student));
+        return ResponseEntity.ok(200);
     }
 }
