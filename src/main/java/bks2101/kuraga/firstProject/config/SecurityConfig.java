@@ -48,11 +48,11 @@ public class SecurityConfig  {
                         .requestMatchers("/auth").permitAll()
                         .requestMatchers("/registration").permitAll()
                         .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authenticationProvider(daoAuthenticationProvider())
+                .authenticationProvider(daoAuthenticationProvider())
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
