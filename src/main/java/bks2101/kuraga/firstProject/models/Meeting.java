@@ -1,10 +1,7 @@
 package bks2101.kuraga.firstProject.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -13,6 +10,7 @@ import java.util.Date;
 @Setter
 @Getter
 @AllArgsConstructor
+@Builder
 @Table(name="Meeting")
 public class Meeting {
     @Id
@@ -20,7 +18,11 @@ public class Meeting {
     private Long id;
     private Date date;
     private String topic;
+    private String location;
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
+    @ManyToOne
+    @JoinColumn(name = "curator_id")
+    private Curator curator;
 }
