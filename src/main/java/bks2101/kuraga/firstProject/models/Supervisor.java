@@ -19,10 +19,13 @@ public class Supervisor {
     private String first_name;
     private String last_name;
     private String personal_data;
-    private String username;
+    private String email;
     @OneToMany(mappedBy = "supervisor")
     private Set<Curator> curators;
     public void addCurator(Curator curator) {
         this.curators.add(curator);
+    }
+    public void deleteCurator(Curator curator) {
+        this.curators.remove(curator);
     }
 }
