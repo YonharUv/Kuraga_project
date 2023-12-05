@@ -1,5 +1,6 @@
 package bks2101.kuraga.firstProject.controllers;
 
+import bks2101.kuraga.firstProject.exceptions.GroupNotFoundByCurator;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.NotFoundByIdException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
@@ -30,6 +31,13 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(UserAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleUserAlreadyExists(UserAlreadyExistsException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
+    @ExceptionHandler(GroupNotFoundByCurator.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleGroupNotFoundByCurator(UserAlreadyExistsException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());
