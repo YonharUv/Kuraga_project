@@ -1,61 +1,48 @@
 package bks2101.kuraga.firstProject.controllers;
 
+import bks2101.kuraga.firstProject.dto.GroupDto;
+import bks2101.kuraga.firstProject.dto.StudentDto;
+import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
 import bks2101.kuraga.firstProject.models.Group;
 import bks2101.kuraga.firstProject.repository.GroupRepository;
+import bks2101.kuraga.firstProject.service.GroupService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static java.lang.String.format;
 
 @RestController
+@RequiredArgsConstructor
 public class GroupController {
-    @Autowired
-    private GroupRepository groupRepository;
+    private final GroupService groupService;
     @GetMapping("/groups")
-    ResponseEntity getAllGroups() {
-        return ResponseEntity.ok(groupRepository.findAll());
+    ResponseEntity<Set<GroupDto>> getAllGroups() {
+        return groupService.getAllGroups();
     }
     @PostMapping("/groups")
-    public ResponseEntity createGroup(@RequestBody Group group) {
-        if (groupRepository.existsByName(group.getName())) {
-            ResponseEntity.badRequest().body("Группа " + group.getName() + " уже существует");
-        }
-        try {
-            groupRepository.save(group);
-            return ResponseEntity.ok("Группа " + group.getName() + " успешна сохранена");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Произошла ошибка при сохранении");
-        }
+    public ResponseEntity<GroupDto> createGroup(@RequestBody GroupDto group) throws UserAlreadyExistsException {
+        return groupService.createGroup(group);
     }
     @GetMapping("/groups/{name}")
-    public ResponseEntity getUserByUsername(@PathVariable String name) throws UserNotFoundByUsernameException {
-        if (!groupRepository.existsByName(name)){
-            ResponseEntity.badRequest().body("Группа " + name + " не существует");
-        }
-        return ResponseEntity.ok(groupRepository.findByName(name));
+    public ResponseEntity<GroupDto> getGroupByUsername(@PathVariable String name) throws UserNotFoundByUsernameException {
+        return groupService.getGroupByName(name);
     }
-//    @PutMapping("/users/{name}")
-//    public ResponseEntity<Optional<Group>> exchangeGroup(@RequestBody Group newGroup, @PathVariable String name) {
-//        if (!groupRepository.existsByName(name)) {
-//            ResponseEntity.badRequest().body("Группа " + name + " не существует");
-//        }
-//        return ResponseEntity.ok(groupRepository.findByName(name).map(group -> {
-//            group.setName(newGroup.getName());
-//            group.setCurator(newGroup.getCurator());
-//            group.setMeetings(newGroup.getMeetings());
-//            return groupRepository.save(group);
-//        }));
-//    }
-    @DeleteMapping("/users/{name}")
-    public ResponseEntity deleteGroup(@PathVariable String name) {
-        if (!groupRepository.existsByName(name)) {
-            ResponseEntity.badRequest().body("Группа " + name + " не существует");
-        }
-        groupRepository.deleteByName(name);
-        return ResponseEntity.ok("Группа " + name + " удалена");
+    @DeleteMapping("/groups/{name}")
+    public ResponseEntity<String> deleteGroup(@PathVariable String name) throws UserNotFoundByUsernameException {
+        return groupService.deleteGroupByName(name);
+    }
+    @PostMapping("/groups/{name}")
+    public ResponseEntity<GroupDto> updateGroupByName(@PathVariable String name, @RequestBody GroupDto group) throws UserNotFoundByUsernameException {
+        return groupService.updateGroup(name, group);
+    }
+    @GetMapping("groups/{name}/students")
+    public ResponseEntity<Set<StudentDto>> getGroupStudentsByName(@PathVariable String groupName) throws UserNotFoundByUsernameException {
+        return groupService.getGroupStudents(groupName);
     }
 }
