@@ -16,6 +16,7 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String faculty_name;
     private String name;
     @ManyToOne
     @JoinColumn(name = "curator_id")
@@ -24,4 +25,7 @@ public class Group {
     private Set<Student> students;
     @OneToMany(mappedBy = "group")
     private Set<Meeting> meetings;
+    public void AddMeeting(Meeting meeting) {
+        this.meetings.add(meeting);
+    }
 }
