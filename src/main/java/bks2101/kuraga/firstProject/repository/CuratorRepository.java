@@ -8,8 +8,10 @@ import java.util.Optional;
 
 @Repository
 public interface CuratorRepository extends JpaRepository<Curator, Long> {
+    boolean existsByEmail(String email);
+    Curator getByEmail(String email);
     Optional<Curator> findById(Long id);
 
     Curator getById(Long id);
-    Curator findByUsername(String username);
+    Curator findByEmail(String email);
 }
