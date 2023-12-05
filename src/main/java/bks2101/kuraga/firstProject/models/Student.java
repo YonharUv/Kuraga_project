@@ -1,16 +1,14 @@
 package bks2101.kuraga.firstProject.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @Setter
 @Getter
 @AllArgsConstructor
+@Builder
 @Table(name="Student")
 public class Student {
     @Id
@@ -19,10 +17,8 @@ public class Student {
     private String first_name;
     private String last_name;
     private String personal_data;
-    private String username;
-    @ManyToOne
-    @JoinColumn(name = "curator_id")
-    private Curator curator;
+    private String email;
+    private String vk_id;
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
