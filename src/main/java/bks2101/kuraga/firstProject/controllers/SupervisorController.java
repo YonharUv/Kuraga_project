@@ -1,18 +1,14 @@
 package bks2101.kuraga.firstProject.controllers;
 
-import bks2101.kuraga.firstProject.dto.RequestAddByUsername;
-import bks2101.kuraga.firstProject.dto.SupervisorDto;
-import bks2101.kuraga.firstProject.exceptions.NotFoundByIdException;
-import bks2101.kuraga.firstProject.models.Supervisor;
-import bks2101.kuraga.firstProject.repository.CuratorRepository;
-import bks2101.kuraga.firstProject.repository.SupervisorRepository;
+import bks2101.kuraga.firstProject.dto.RequestAddCurators;
+import bks2101.kuraga.firstProject.dto.RequestSupervisor;
+import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
+import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
 import bks2101.kuraga.firstProject.service.SupervisorService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -21,17 +17,35 @@ import static java.lang.String.format;
 public class SupervisorController {
 
     private final SupervisorService supervisorService;
+
     @GetMapping("/supervisor")
-    ResponseEntity getAllSupervisor() {
+    ResponseEntity AllCurators() {
         return supervisorService.getAllSupervisors();
     }
-    @PostMapping("/supervisor")
-    public ResponseEntity createSupervisor(@RequestHeader("Authorization") String authHeader, @RequestBody SupervisorDto supervisorDto)  {
-        return supervisorService.createSupervisor(authHeader, supervisorDto);
+    @PutMapping("/supervisor")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity createSupervisorAdmin(@RequestBody RequestSupervisor supervisor) throws UserAlreadyExistsException {
+        return supervisorService.createSupervisorAdmin(supervisor);
     }
-    @PostMapping("/supervisor/{username}/curators")
-    public ResponseEntity addCurators(@PathVariable String username, RequestAddByUsername curatorsName) {
-        return ResponseEntity.ok("");
+    @PostMapping("/supervisor")
+    public ResponseEntity createSupervisor(@RequestHeader("Authorization") String authHeader, @RequestBody RequestSupervisor reqSupervisor)  {
+        return supervisorService.createSupervisor(authHeader, reqSupervisor);
+    }
+    @GetMapping("/supervisor/{email}")
+    public ResponseEntity getSupervisorByEmail(@PathVariable String email) throws UserNotFoundByUsernameException {
+        return supervisorService.getSupervisorByEmail(email);
+    }
+    @PostMapping("/supervisor/{email}")
+    public ResponseEntity updateSupervisor(@PathVariable String email, @RequestBody RequestSupervisor supervisor) throws UserNotFoundByUsernameException {
+        return supervisorService.updateSupervisor(email, supervisor);
+    }
+    @PostMapping("/supervisor/{email}/curators")
+    public ResponseEntity addCurators(@PathVariable String email, @RequestBody RequestAddCurators curators_emails) {
+        return supervisorService.addCurators(email, curators_emails);
+    }
+    @DeleteMapping("/supervisor/{email}")
+    public ResponseEntity deleteSupervisor(@PathVariable String email) throws UserNotFoundByUsernameException {
+        return supervisorService.deleteSupervisor(email);
     }
 }
 
