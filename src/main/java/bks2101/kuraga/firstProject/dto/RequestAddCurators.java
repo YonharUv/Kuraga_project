@@ -4,6 +4,6 @@ import lombok.Data;
 
 import java.util.Set;
 @Data
-public class RequestAddByUsername {
-    private Set<String> curatorsUsername;
+public class RequestAddCurators {
+    private Set<String> curators_email;
 }
