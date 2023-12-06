@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 import static java.lang.String.format;
 
 @RestController
@@ -22,14 +24,14 @@ public class UserController {
         return userService.getAllUser();
     }
     @GetMapping("/users/{id}")
-    public ResponseEntity getUserById(@PathVariable Long id) throws NotFoundByIdException {
+    public ResponseEntity<Optional<ApplicationUser>> getUserById(@PathVariable Long id) throws NotFoundByIdException {
         return userService.getUserByID(id);
     }
     @GetMapping("/users/find/{username}")
     public ResponseEntity getUserByUsername(@PathVariable String username) throws UserNotFoundByUsernameException {
         return userService.getUserByUsername(username);
     }
-    @PutMapping("/users/{id}")
+    @PostMapping("/users/{id}")
     public ResponseEntity exchangeUser(@RequestBody ApplicationUser newApplicationUser, @PathVariable Long id) throws NotFoundByIdException {
         return userService.exchangeUser(newApplicationUser, id);
     }

@@ -38,7 +38,7 @@ public class GroupController {
         return groupService.deleteGroupByName(name);
     }
     @PostMapping("/groups/{name}")
-    public ResponseEntity<GroupDto> updateGroupByName(@PathVariable String name, @RequestBody GroupDto group) throws UserNotFoundByUsernameException {
+    public ResponseEntity<GroupDto> updateGroupByName(@PathVariable String name, @RequestBody GroupDto group) throws UserNotFoundByUsernameException, UserAlreadyExistsException {
         return groupService.updateGroup(name, group);
     }
     @GetMapping("groups/{name}/students")

@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,7 @@ public class GroupService {
             throw new UserAlreadyExistsException("Группа", groupDto.getName());
         }
         Group group = new Group();
+        groupRepository.save(group);
         if (groupDto.getCurator_email() != null && curatorRepository.existsByEmail(groupDto.getCurator_email())) {
             Curator curator = curatorRepository.getByEmail(groupDto.getCurator_email());
             group.setCurator(curator);
@@ -77,11 +79,14 @@ public class GroupService {
         return  ResponseEntity.ok(res);
     }
 
-    public ResponseEntity<GroupDto> updateGroup(String groupName, GroupDto groupDto) throws UserNotFoundByUsernameException {
+    public ResponseEntity<GroupDto> updateGroup(String groupName, GroupDto groupDto) throws UserNotFoundByUsernameException, UserAlreadyExistsException {
         if (!groupRepository.existsByName(groupName)) {
             throw new UserNotFoundByUsernameException("Группа", groupName);
         }
         Group group = groupRepository.findByName(groupName);
+        if (groupRepository.existsByName(groupDto.getName()) && !Objects.equals(groupDto.getName(), groupName)) {
+            throw new UserAlreadyExistsException("Группа", groupName);
+        }
         if (groupDto.getCurator_email() != null && curatorRepository.existsByEmail(groupDto.getCurator_email())) {
             Curator curator = curatorRepository.getByEmail(groupDto.getCurator_email());
             group.setCurator(curator);
@@ -90,6 +95,7 @@ public class GroupService {
                         .map(meetingDto -> mapToMeeting(curator, meetingDto, group))
                         .collect(Collectors.toSet());
                 group.setMeetings(meetings);
+                meetingRepository.saveAll(meetings);
             }
         }
         group.setName(groupDto.getName());
@@ -99,6 +105,7 @@ public class GroupService {
                     .map(studentDto -> mapToStudent(studentDto, group))
                     .collect(Collectors.toSet());
             group.setStudents(students);
+            studentRepository.saveAll(students);
         }
         groupRepository.save(group);
         return ResponseEntity.ok(MappingUtil.mapToGroupDto(group));

@@ -38,6 +38,13 @@ public class CuratorService {
                 .toList();
         return ResponseEntity.ok(curatorDtoList);
     }
+    public ResponseEntity<String> deleteCuratorByEmail(String email) throws UserNotFoundByUsernameException {
+        if (!curatorRepository.existsByEmail(email)) {
+            throw new UserNotFoundByUsernameException("Куратор", email);
+        }
+        curatorRepository.delete(curatorRepository.getByEmail(email));
+        return ResponseEntity.ok("Куратор" + email + "успешно удален");
+    }
     public ResponseEntity<String> createCurator(String authHeader, CuratorDto curatorDto) throws UserAlreadyExistsException {
         String jwtToken = authHeader.substring(7);
         String email = jwtTokenUtils.getUsername(jwtToken);
@@ -66,12 +73,6 @@ public class CuratorService {
         supervisorRepository.save(supervisor);
         curatorRepository.save(curator);
         return ResponseEntity.ok("Куратор успешно создан");
-    }
-    public Curator getCuratorByUsername(String username) {
-        return curatorRepository.findByEmail(username);
-    }
-    public void saveCurator(Curator curator) {
-        curatorRepository.save(curator);
     }
 
     public ResponseEntity<CuratorDto> getCuratorByEmail(String curatorEmail) throws UserNotFoundByUsernameException {

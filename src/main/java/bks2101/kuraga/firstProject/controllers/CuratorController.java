@@ -39,11 +39,11 @@ public class CuratorController {
     ResponseEntity<GroupDto> getCuratorGroupByName(@PathVariable String curatorEmail, @PathVariable String groupName) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
         return curatorService.getCuratorGroupByName(curatorEmail, groupName);
     }
+//    @PutMapping("/curators")
+//    ResponseEntity<String> createCurator(@RequestHeader("Authorization") String authHeader, @RequestBody CuratorDto curator) throws UserAlreadyExistsException {
+//        return curatorService.createCurator(authHeader, curator);
+//    }
     @PostMapping("/curators")
-    ResponseEntity<String> createCurator(@RequestHeader("Authorization") String authHeader, @RequestBody CuratorDto curator) throws UserAlreadyExistsException {
-        return curatorService.createCurator(authHeader, curator);
-    }
-    @PutMapping("/curators")
     ResponseEntity<String> createCuratorAdmin(@RequestHeader("Authorization") String authHeader, @RequestBody CuratorDto curator) throws UserAlreadyExistsException {
         return curatorService.createCuratorAdmin(curator);
     }

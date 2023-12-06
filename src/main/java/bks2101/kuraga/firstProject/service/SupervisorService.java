@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -95,12 +96,16 @@ public class SupervisorService {
         return ResponseEntity.ok(supervisorDto);
     }
 
-    public ResponseEntity updateSupervisor(String email, RequestSupervisor supervisor) throws UserNotFoundByUsernameException {
+    public ResponseEntity updateSupervisor(String email, RequestSupervisor supervisor) throws UserNotFoundByUsernameException, UserAlreadyExistsException {
         if (!supervisorRepository.existsByEmail(email)) {
             throw new UserNotFoundByUsernameException("Руководитель кураторов", email);
         }
         Supervisor oldSupervisor = supervisorRepository.findByEmail(email);
+        if (supervisorRepository.existsByEmail(supervisor.getEmail()) && !Objects.equals(supervisor.getEmail(), email)) {
+            throw new UserAlreadyExistsException("Руководитель кураторов", email);
+        }
         if (supervisor.getFirst_name() != null) {
+
             oldSupervisor.setFirst_name(supervisor.getFirst_name());
         }
         if (supervisor.getLast_name() != null) {
@@ -120,7 +125,7 @@ public class SupervisorService {
         return ResponseEntity.ok(supervisorRepository.save(oldSupervisor));
     }
 
-    public ResponseEntity deleteSupervisor(String email) throws UserNotFoundByUsernameException {
+    public ResponseEntity<String> deleteSupervisor(String email) throws UserNotFoundByUsernameException {
         if (!supervisorRepository.existsByEmail(email)) {
             throw new UserNotFoundByUsernameException("Руководитель кураторов", email);
         }

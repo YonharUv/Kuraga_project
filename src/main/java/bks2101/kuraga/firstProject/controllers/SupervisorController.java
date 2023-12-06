@@ -22,21 +22,21 @@ public class SupervisorController {
     ResponseEntity AllCurators() {
         return supervisorService.getAllSupervisors();
     }
-    @PutMapping("/supervisor")
+    @PostMapping("/supervisor")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity createSupervisorAdmin(@RequestBody RequestSupervisor supervisor) throws UserAlreadyExistsException {
         return supervisorService.createSupervisorAdmin(supervisor);
     }
-    @PostMapping("/supervisor")
-    public ResponseEntity createSupervisor(@RequestHeader("Authorization") String authHeader, @RequestBody RequestSupervisor reqSupervisor)  {
-        return supervisorService.createSupervisor(authHeader, reqSupervisor);
-    }
+//    @PutMapping("/supervisor")
+//    public ResponseEntity createSupervisor(@RequestHeader("Authorization") String authHeader, @RequestBody RequestSupervisor reqSupervisor)  {
+//        return supervisorService.createSupervisor(authHeader, reqSupervisor);
+//    }
     @GetMapping("/supervisor/{email}")
     public ResponseEntity getSupervisorByEmail(@PathVariable String email) throws UserNotFoundByUsernameException {
         return supervisorService.getSupervisorByEmail(email);
     }
     @PostMapping("/supervisor/{email}")
-    public ResponseEntity updateSupervisor(@PathVariable String email, @RequestBody RequestSupervisor supervisor) throws UserNotFoundByUsernameException {
+    public ResponseEntity updateSupervisor(@PathVariable String email, @RequestBody RequestSupervisor supervisor) throws UserNotFoundByUsernameException, UserAlreadyExistsException {
         return supervisorService.updateSupervisor(email, supervisor);
     }
     @PostMapping("/supervisor/{email}/curators")

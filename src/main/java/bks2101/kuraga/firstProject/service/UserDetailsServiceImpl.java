@@ -14,6 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 import static java.lang.String.format;
 
 @Service
@@ -44,21 +47,28 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
-    public ResponseEntity getUserByID(Long id) throws NotFoundByIdException {
+    public ResponseEntity<Optional<ApplicationUser>> getUserByID(Long id) throws NotFoundByIdException {
         if (!userRepository.existsById(id)) {
             throw new NotFoundByIdException("Пользователя",id);
         }
         return ResponseEntity.ok(userRepository.findById(id));
     }
-    public ResponseEntity getAllUser() {
+    public ResponseEntity<List<ApplicationUser>> getAllUser() {
         return ResponseEntity.ok(userRepository.findAll());
     }
-    public ResponseEntity deleteUserByID(long id) throws NotFoundByIdException {
+    public ResponseEntity<String> deleteUserByID(long id) throws NotFoundByIdException {
         if (!userRepository.existsById(id)) {
             throw new NotFoundByIdException("Пользователя",id);
         }
         userRepository.deleteById(id);
         return ResponseEntity.ok(format("Пользователь с id = %d успешно удален", id));
+    }
+    public ResponseEntity<String> deleteUserByEmail(String email) throws UserNotFoundByUsernameException {
+        if (!userRepository.existsByEmail(email)) {
+            throw new UserNotFoundByUsernameException("Пользователя",email);
+        }
+        userRepository.delete(userRepository.findByEmail(email));
+        return ResponseEntity.ok(format("Пользователь %s успешно удален", email));
     }
     public ResponseEntity exchangeUser(ApplicationUser newUser, long id) throws NotFoundByIdException {
         if (!userRepository.existsById(id)) {
