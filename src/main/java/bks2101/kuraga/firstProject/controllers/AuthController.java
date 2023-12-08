@@ -42,18 +42,18 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    @PostMapping("/registration")
-    public ResponseEntity<?> createNewUser(@RequestBody RegistrationUserDto registrationUserDto) {
-        if (!registrationUserDto.getPassword().equals(registrationUserDto.getConfirmPassword())) {
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пароли не совпадают"), HttpStatus.BAD_REQUEST);
-        }
-        if (userRepository.findByUsername(registrationUserDto.getUsername()).isPresent()) {
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с указанным именем уже существует"), HttpStatus.BAD_REQUEST);
-        }
-        if (userRepository.getByEmail(registrationUserDto.getEmail()).isPresent()) {
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с такой почтой уже существует"), HttpStatus.BAD_REQUEST);
-        }
-        ApplicationUser user = userService.createNewUser(registrationUserDto);
-        return ResponseEntity.ok(user);
-    }
+//    @PostMapping("/registration")
+//    public ResponseEntity<?> createNewUser(@RequestBody RegistrationUserDto registrationUserDto) {
+//        if (!registrationUserDto.getPassword().equals(registrationUserDto.getConfirmPassword())) {
+//            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пароли не совпадают"), HttpStatus.BAD_REQUEST);
+//        }
+//        if (userRepository.findByUsername(registrationUserDto.getUsername()).isPresent()) {
+//            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с указанным именем уже существует"), HttpStatus.BAD_REQUEST);
+//        }
+//        if (userRepository.getByEmail(registrationUserDto.getEmail()).isPresent()) {
+//            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с такой почтой уже существует"), HttpStatus.BAD_REQUEST);
+//        }
+//        ApplicationUser user = userService.createNewUser(registrationUserDto);
+//        return ResponseEntity.ok(user);
+//    }
 }

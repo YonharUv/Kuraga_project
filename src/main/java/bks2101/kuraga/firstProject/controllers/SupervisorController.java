@@ -18,15 +18,11 @@ public class SupervisorController {
 
     private final SupervisorService supervisorService;
 
-    @GetMapping("/supervisor")
-    ResponseEntity AllCurators() {
-        return supervisorService.getAllSupervisors();
-    }
-    @PostMapping("/supervisor")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity createSupervisorAdmin(@RequestBody RequestSupervisor supervisor) throws UserAlreadyExistsException {
-        return supervisorService.createSupervisorAdmin(supervisor);
-    }
+//    @GetMapping("/supervisors")
+//    ResponseEntity AllSupervisors() {
+//        return supervisorService.getAllSupervisors();
+//    }
+
 //    @PutMapping("/supervisor")
 //    public ResponseEntity createSupervisor(@RequestHeader("Authorization") String authHeader, @RequestBody RequestSupervisor reqSupervisor)  {
 //        return supervisorService.createSupervisor(authHeader, reqSupervisor);
@@ -43,9 +39,6 @@ public class SupervisorController {
     public ResponseEntity addCurators(@PathVariable String email, @RequestBody RequestAddCurators curators_emails) {
         return supervisorService.addCurators(email, curators_emails);
     }
-    @DeleteMapping("/supervisor/{email}")
-    public ResponseEntity deleteSupervisor(@PathVariable String email) throws UserNotFoundByUsernameException {
-        return supervisorService.deleteSupervisor(email);
-    }
+
 }
 

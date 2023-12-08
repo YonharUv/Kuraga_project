@@ -16,7 +16,7 @@ import static java.lang.String.format;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-public class UserController {
+public class AdminUsersController {
     @Autowired
     private final UserDetailsServiceImpl userService;
     @GetMapping("/users")
@@ -35,7 +35,7 @@ public class UserController {
     public ResponseEntity exchangeUser(@RequestBody ApplicationUser newApplicationUser, @PathVariable Long id) throws NotFoundByIdException {
         return userService.exchangeUser(newApplicationUser, id);
     }
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/user/delete/{id}")
     public ResponseEntity deleteUser(@PathVariable Long id) throws NotFoundByIdException {
         return userService.deleteUserByID(id);
     }

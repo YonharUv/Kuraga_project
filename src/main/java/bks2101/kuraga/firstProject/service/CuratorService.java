@@ -7,13 +7,11 @@ import bks2101.kuraga.firstProject.dto.MeetingDto;
 import bks2101.kuraga.firstProject.exceptions.GroupNotFoundByCurator;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
-import bks2101.kuraga.firstProject.models.Curator;
-import bks2101.kuraga.firstProject.models.Group;
-import bks2101.kuraga.firstProject.models.Meeting;
-import bks2101.kuraga.firstProject.models.Supervisor;
+import bks2101.kuraga.firstProject.models.*;
 import bks2101.kuraga.firstProject.repository.CuratorRepository;
 import bks2101.kuraga.firstProject.repository.GroupRepository;
 import bks2101.kuraga.firstProject.repository.SupervisorRepository;
+import bks2101.kuraga.firstProject.repository.UserRepository;
 import bks2101.kuraga.firstProject.utils.JwtTokenUtils;
 import bks2101.kuraga.firstProject.utils.MappingUtil;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.String.format;
+
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +31,7 @@ public class CuratorService {
     private final JwtTokenUtils jwtTokenUtils;
     private final SupervisorRepository supervisorRepository;
     private final GroupRepository groupRepository;
+    private final UserRepository userRepository;
     public ResponseEntity<List<CuratorDto>> getAllCurators() {
         var listCurators = curatorRepository.findAll();
         List<CuratorDto> curatorDtoList = listCurators.stream()
@@ -67,6 +68,8 @@ public class CuratorService {
         curator.setLast_name(curatorDto.getLast_name());
         curator.setPersonal_data(curatorDto.getPersonal_data());
         curator.setEmail(curatorDto.getEmail());
+        ApplicationUser curatorUser = userRepository.findByEmail(curatorDto.getEmail());
+        curator.setUsername(curatorUser.getUsername());
         Supervisor supervisor = supervisorRepository.findByEmail(curatorDto.getSupervisor_email());
         supervisor.addCurator(curator);
         curator.setSupervisor(supervisor);
@@ -127,5 +130,13 @@ public class CuratorService {
         curatorRepository.save(curator);
         groupRepository.save(group);
         return ResponseEntity.ok(meetingDto);
+    }
+    public ResponseEntity<String> deleteCurator(String email) throws UserNotFoundByUsernameException {
+        if (!curatorRepository.existsByEmail(email)) {
+            throw new UserNotFoundByUsernameException("Куратор", email);
+        }
+        Curator curator = curatorRepository.findByEmail(email);
+        curatorRepository.delete(curator);
+        return ResponseEntity.ok(format("Куратор %s успешно удален", email));
     }
 }

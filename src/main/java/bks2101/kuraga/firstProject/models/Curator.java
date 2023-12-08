@@ -20,6 +20,7 @@ public class Curator {
     private String last_name;
     private String personal_data;
     private String email;
+    private String username;
     @ManyToOne(optional = true)
     @JoinColumn(name="supervisor_id")
     private Supervisor supervisor;

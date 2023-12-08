@@ -19,10 +19,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CuratorController {
     private final CuratorService curatorService;
-    @GetMapping("/curators")
-    ResponseEntity<List<CuratorDto>> AllCurators() {
-        return curatorService.getAllCurators();
-    }
+//    @GetMapping("/curators")
+//    ResponseEntity<List<CuratorDto>> AllCurators() {
+//        return curatorService.getAllCurators();
+//    }
     @GetMapping("/curators/{curatorEmail}")
     ResponseEntity<CuratorDto> getCuratorByName(@PathVariable String curatorEmail) throws UserNotFoundByUsernameException {
         return curatorService.getCuratorByEmail(curatorEmail);
@@ -43,10 +43,6 @@ public class CuratorController {
 //    ResponseEntity<String> createCurator(@RequestHeader("Authorization") String authHeader, @RequestBody CuratorDto curator) throws UserAlreadyExistsException {
 //        return curatorService.createCurator(authHeader, curator);
 //    }
-    @PostMapping("/curators")
-    ResponseEntity<String> createCuratorAdmin(@RequestHeader("Authorization") String authHeader, @RequestBody CuratorDto curator) throws UserAlreadyExistsException {
-        return curatorService.createCuratorAdmin(curator);
-    }
     @PostMapping("/curator/{curatorEmail}/{groupName}/meetings")
     ResponseEntity<MeetingDto> createGroupMeetings(@PathVariable String curatorEmail, @PathVariable String groupName, @RequestBody MeetingDto meeting) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
         return curatorService.createGroupMeetings(curatorEmail, groupName, meeting);
