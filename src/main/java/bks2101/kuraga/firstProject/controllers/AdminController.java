@@ -4,10 +4,9 @@ import bks2101.kuraga.firstProject.dto.CuratorDto;
 import bks2101.kuraga.firstProject.dto.RegistrationUserDto;
 import bks2101.kuraga.firstProject.dto.RequestSupervisor;
 import bks2101.kuraga.firstProject.exceptions.AppError;
-import bks2101.kuraga.firstProject.exceptions.NotFoundByIdException;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
-import bks2101.kuraga.firstProject.models.ApplicationUser;
+import bks2101.kuraga.firstProject.entitys.ApplicationUser;
 import bks2101.kuraga.firstProject.repository.UserRepository;
 import bks2101.kuraga.firstProject.service.CuratorService;
 import bks2101.kuraga.firstProject.service.SupervisorService;
@@ -16,11 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin")

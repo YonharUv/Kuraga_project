@@ -1,7 +1,7 @@
 package bks2101.kuraga.firstProject.config;
 
-import bks2101.kuraga.firstProject.models.ApplicationUser;
-import bks2101.kuraga.firstProject.models.Role;
+import bks2101.kuraga.firstProject.entitys.ApplicationUser;
+import bks2101.kuraga.firstProject.entitys.Role;
 import bks2101.kuraga.firstProject.repository.UserRepository;
 import bks2101.kuraga.firstProject.service.UserDetailsServiceImpl;
 import jakarta.transaction.Transactional;
@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Set;
 
 @Configuration
 @RequiredArgsConstructor

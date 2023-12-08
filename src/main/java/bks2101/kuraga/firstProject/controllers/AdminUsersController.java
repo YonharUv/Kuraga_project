@@ -2,7 +2,7 @@ package bks2101.kuraga.firstProject.controllers;
 
 import bks2101.kuraga.firstProject.exceptions.NotFoundByIdException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
-import bks2101.kuraga.firstProject.models.ApplicationUser;
+import bks2101.kuraga.firstProject.entitys.ApplicationUser;
 import bks2101.kuraga.firstProject.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,12 +1,9 @@
 package bks2101.kuraga.firstProject.utils;
 
 import bks2101.kuraga.firstProject.dto.*;
-import bks2101.kuraga.firstProject.models.*;
-import bks2101.kuraga.firstProject.repository.CuratorRepository;
-import lombok.RequiredArgsConstructor;
+import bks2101.kuraga.firstProject.entitys.*;
 import lombok.experimental.UtilityClass;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 

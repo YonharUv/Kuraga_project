@@ -1,6 +1,6 @@
 package bks2101.kuraga.firstProject.repository;
 
-import bks2101.kuraga.firstProject.models.Student;
+import bks2101.kuraga.firstProject.entitys.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

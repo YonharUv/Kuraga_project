@@ -1,7 +1,7 @@
 package bks2101.kuraga.firstProject.service;
 
 
-import bks2101.kuraga.firstProject.models.ApplicationUser;
+import bks2101.kuraga.firstProject.entitys.ApplicationUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data

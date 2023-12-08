@@ -4,15 +4,11 @@ import bks2101.kuraga.firstProject.dto.GroupDto;
 import bks2101.kuraga.firstProject.dto.StudentDto;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
-import bks2101.kuraga.firstProject.models.Group;
-import bks2101.kuraga.firstProject.repository.GroupRepository;
 import bks2101.kuraga.firstProject.service.GroupService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 import java.util.Set;
 
 import static java.lang.String.format;

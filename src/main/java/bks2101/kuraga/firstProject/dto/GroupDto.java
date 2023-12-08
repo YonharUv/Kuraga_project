@@ -1,6 +1,5 @@
 package bks2101.kuraga.firstProject.dto;
 
-import bks2101.kuraga.firstProject.models.Student;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

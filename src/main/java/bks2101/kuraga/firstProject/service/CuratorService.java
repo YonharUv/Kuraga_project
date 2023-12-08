@@ -1,13 +1,12 @@
 package bks2101.kuraga.firstProject.service;
 
 import bks2101.kuraga.firstProject.dto.CuratorDto;
-import bks2101.kuraga.firstProject.dto.CuratorResponse;
 import bks2101.kuraga.firstProject.dto.GroupDto;
 import bks2101.kuraga.firstProject.dto.MeetingDto;
 import bks2101.kuraga.firstProject.exceptions.GroupNotFoundByCurator;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
-import bks2101.kuraga.firstProject.models.*;
+import bks2101.kuraga.firstProject.entitys.*;
 import bks2101.kuraga.firstProject.repository.CuratorRepository;
 import bks2101.kuraga.firstProject.repository.GroupRepository;
 import bks2101.kuraga.firstProject.repository.SupervisorRepository;

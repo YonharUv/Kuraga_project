@@ -1,4 +1,4 @@
-package bks2101.kuraga.firstProject.models;
+package bks2101.kuraga.firstProject.entitys;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

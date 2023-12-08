@@ -2,15 +2,11 @@ package bks2101.kuraga.firstProject.controllers;
 
 import bks2101.kuraga.firstProject.dto.JwtRequest;
 import bks2101.kuraga.firstProject.dto.JwtResponse;
-import bks2101.kuraga.firstProject.dto.RegistrationUserDto;
 import bks2101.kuraga.firstProject.exceptions.AppError;
-import bks2101.kuraga.firstProject.models.ApplicationUser;
 import bks2101.kuraga.firstProject.repository.UserRepository;
-import bks2101.kuraga.firstProject.service.UserDetailsImpl;
 import bks2101.kuraga.firstProject.service.UserDetailsServiceImpl;
 import bks2101.kuraga.firstProject.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

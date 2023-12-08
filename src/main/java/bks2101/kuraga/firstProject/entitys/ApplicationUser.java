@@ -1,8 +1,6 @@
-package bks2101.kuraga.firstProject.models;
+package bks2101.kuraga.firstProject.entitys;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.Set;
 
 @Entity
 @NoArgsConstructor
