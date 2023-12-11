@@ -38,6 +38,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         user.setRole(Role.USER);
         return userRepository.save(user);
     }
+
+    public ResponseEntity setRole(String email, Role role) {
+        ApplicationUser user = new ApplicationUser();
+        user.setRole(role);
+        userRepository.save(user);
+        return ResponseEntity.ok("role succesfully setted");
+    }
+
+    public ApplicationUser banUser(ApplicationUser user) {
+        user.setRole(Role.BANNED);
+        return userRepository.save(user);
+    }
+
     public ResponseEntity getUserByUsername(String username) throws UserNotFoundByUsernameException {
         if (!userRepository.existsByUsername(username)){
             throw new UserNotFoundByUsernameException("Пользователя", username);
@@ -52,6 +65,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new NotFoundByIdException("Пользователя",id);
         }
         return ResponseEntity.ok(userRepository.findById(id));
+    }
+    public ApplicationUser findUserByID(Long id) throws NotFoundByIdException {
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundByIdException("Пользователя",id);
+        }
+        return userRepository.getById(id);
     }
     public ResponseEntity<List<ApplicationUser>> getAllUser() {
         return ResponseEntity.ok(userRepository.findAll());

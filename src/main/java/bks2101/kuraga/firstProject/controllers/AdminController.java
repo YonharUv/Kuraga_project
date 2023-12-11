@@ -3,6 +3,7 @@ package bks2101.kuraga.firstProject.controllers;
 import bks2101.kuraga.firstProject.dto.CuratorDto;
 import bks2101.kuraga.firstProject.dto.RegistrationUserDto;
 import bks2101.kuraga.firstProject.dto.RequestSupervisor;
+import bks2101.kuraga.firstProject.entitys.Role;
 import bks2101.kuraga.firstProject.exceptions.AppError;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
@@ -61,15 +62,9 @@ public class AdminController {
         return curatorService.deleteCurator(email);
     }
 
-//    @DeleteMapping("/curator/delete/{id}")
-//    public ResponseEntity deleteUser(@PathVariable Long id) throws NotFoundByIdException {
-//        return userService.deleteUserByID(id);
-//    }
-
-
-
     @PostMapping("/supervisor/create")
     public ResponseEntity createSupervisorAdmin(@RequestBody RequestSupervisor supervisor) throws UserAlreadyExistsException {
+        userService.setRole(supervisor.getEmail(), Role.SUPERVISOR);
         return supervisorService.createSupervisorAdmin(supervisor);
     }
 
@@ -83,23 +78,13 @@ public class AdminController {
         return supervisorService.deleteSupervisor(email);
     }
 
-//    @GetMapping("/curators/{id}")
-//    public ResponseEntity<Optional<ApplicationUser>> getUserById(@PathVariable Long id) throws NotFoundByIdException {
-//        return userService.getUserByID(id);
-//    }
-//    @GetMapping("/curators/find/{username}")
-//    public ResponseEntity getUserByUsername(@PathVariable String username) throws UserNotFoundByUsernameException {
-//        return userService.getUserByUsername(username);
-//    }
-//    @PostMapping("/curators/{id}")
-//    public ResponseEntity exchangeUser(@RequestBody ApplicationUser newApplicationUser, @PathVariable Long id) throws NotFoundByIdException {
-//        return userService.exchangeUser(newApplicationUser, id);
-//    }
+
 //    TODO:
 //    - set role
 //    - ban
-//    - delete user (увольнение)
-//    - create user (регистрация)
+//    done delete user (увольнение)
+//    done create user (регистрация)
+//    done check users
 //    - delete/create all content:
 //            - Group
 //            - Meetings(for all type of user)

@@ -18,15 +18,6 @@ public class SupervisorController {
 
     private final SupervisorService supervisorService;
 
-//    @GetMapping("/supervisors")
-//    ResponseEntity AllSupervisors() {
-//        return supervisorService.getAllSupervisors();
-//    }
-
-//    @PutMapping("/supervisor")
-//    public ResponseEntity createSupervisor(@RequestHeader("Authorization") String authHeader, @RequestBody RequestSupervisor reqSupervisor)  {
-//        return supervisorService.createSupervisor(authHeader, reqSupervisor);
-//    }
     @GetMapping("/supervisor/{email}")
     public ResponseEntity getSupervisorByEmail(@PathVariable String email) throws UserNotFoundByUsernameException {
         return supervisorService.getSupervisorByEmail(email);

@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Permission {
     ADMIN("ADMIN"),
-    BANNED("BANNED"),
-    USER("USER");
+    USER("USER"),
+    SUPERVISOR("SUPERVISOR"),
+    BANNED("BANNED");
     private final String permission;
 }

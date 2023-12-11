@@ -32,9 +32,9 @@ public class SecurityConfig  {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/auth").permitAll()
-//                        .requestMatchers("/registration").permitAll()  // .hasAuthority("ADMIN") in prod
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers("/supervisor/**").hasAnyAuthority("ADMIN", "SUPERVISOR")
+                        .requestMatchers("/**").hasAnyAuthority("ADMIN", "USER", "SUPERVISOR")
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

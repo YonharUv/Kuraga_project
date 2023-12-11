@@ -13,7 +13,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @AllArgsConstructor
 public enum Role {
     USER(Set.of(Permission.USER)),
-    ADMIN(Set.of(Permission.ADMIN));
+    ADMIN(Set.of(Permission.ADMIN)),
+    SUPERVISOR(Set.of(Permission.SUPERVISOR)),
+    BANNED(Set.of(Permission.BANNED));
     @Getter
     private  final Set<Permission> permissions;
     public List<SimpleGrantedAuthority> grantedAuthority() {

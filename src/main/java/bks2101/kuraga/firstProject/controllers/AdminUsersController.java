@@ -31,10 +31,17 @@ public class AdminUsersController {
     public ResponseEntity getUserByUsername(@PathVariable String username) throws UserNotFoundByUsernameException {
         return userService.getUserByUsername(username);
     }
-    @PostMapping("/users/{id}")
-    public ResponseEntity exchangeUser(@RequestBody ApplicationUser newApplicationUser, @PathVariable Long id) throws NotFoundByIdException {
-        return userService.exchangeUser(newApplicationUser, id);
+    @PostMapping("/users/{id}/ban")
+    public ResponseEntity exchangeUser(@PathVariable Long id) throws NotFoundByIdException {
+        userService.banUser(userService.findUserByID(id));
+        return ResponseEntity.ok("Пользователь успешно забанен");
     }
+
+//    @PostMapping("/users/{id}/setSupervisor")
+//    public ResponseEntity exchangeUser(@RequestBody ApplicationUser newApplicationUser, @PathVariable Long id) throws NotFoundByIdException {
+//        return userService.exchangeUser(newApplicationUser, id);
+//    }
+
     @DeleteMapping("/user/delete/{id}")
     public ResponseEntity deleteUser(@PathVariable Long id) throws NotFoundByIdException {
         return userService.deleteUserByID(id);

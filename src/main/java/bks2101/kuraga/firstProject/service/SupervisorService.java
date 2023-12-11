@@ -3,6 +3,7 @@ package bks2101.kuraga.firstProject.service;
 import bks2101.kuraga.firstProject.dto.RequestAddCurators;
 import bks2101.kuraga.firstProject.dto.RequestSupervisor;
 import bks2101.kuraga.firstProject.dto.SupervisorDto;
+import bks2101.kuraga.firstProject.entitys.Role;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
 import bks2101.kuraga.firstProject.entitys.ApplicationUser;
@@ -38,38 +39,29 @@ public class SupervisorService {
                 .toList();
         return ResponseEntity.ok(supervisorDtoList);
     }
-    public ResponseEntity createSupervisor(String authHeader, RequestSupervisor reqSupervisor) {
-        String jwtToken = authHeader.substring(7);
-        String email = jwtTokenUtils.getUsername(jwtToken);
-        Supervisor supervisor = new Supervisor();
-        supervisor.setFirst_name(reqSupervisor.getFirst_name());
-        supervisor.setLast_name(reqSupervisor.getLast_name());
-        supervisor.setPersonal_data(reqSupervisor.getPersonal_data());
-        supervisor.setEmail(email);
-        var curatorsEmailSet = reqSupervisor.getCurators_email();
-        var curatorsSet = curatorsEmailSet.stream()
-                .filter(curatorRepository::existsByEmail)
-                .map(curatorRepository::getByEmail)
-                .collect(Collectors.toSet());
-        supervisor.setCurators(curatorsSet);
-        return ResponseEntity.ok(supervisorRepository.save(supervisor));
-    }
-
-    public ResponseEntity createSupervisorAdmin(RequestSupervisor reqSupervisor) throws UserAlreadyExistsException {
+//    public ResponseEntity createSupervisor(String authHeader, RequestSupervisor reqSupervisor) {
+//        String jwtToken = authHeader.substring(7);
+//        String email = jwtTokenUtils.getUsername(jwtToken);
+//        Supervisor supervisor = new Supervisor();
+//        supervisor.setFirst_name(reqSupervisor.getFirst_name());
+//        supervisor.setLast_name(reqSupervisor.getLast_name());
+//        supervisor.setPersonal_data(reqSupervisor.getPersonal_data());
+//        supervisor.setEmail(email);
 //        var curatorsEmailSet = reqSupervisor.getCurators_email();
-//        if (supervisorRepository.existsByEmail(reqSupervisor.getEmail())) {
-//            throw new UserAlreadyExistsException("Руководитель кураторов", reqSupervisor.getEmail());
-//        }
 //        var curatorsSet = curatorsEmailSet.stream()
 //                .filter(curatorRepository::existsByEmail)
 //                .map(curatorRepository::getByEmail)
 //                .collect(Collectors.toSet());
+//        supervisor.setCurators(curatorsSet);
+//        return ResponseEntity.ok(supervisorRepository.save(supervisor));
+//    }
+
+    public ResponseEntity createSupervisorAdmin(RequestSupervisor reqSupervisor) throws UserAlreadyExistsException {
         Supervisor supervisor = new Supervisor();
         supervisor.setFirst_name(reqSupervisor.getFirst_name());
         supervisor.setLast_name(reqSupervisor.getLast_name());
         supervisor.setPersonal_data(reqSupervisor.getPersonal_data());
         supervisor.setEmail(reqSupervisor.getEmail());
-//        supervisor.setCurators(curatorsSet);
         ApplicationUser supervisorUser = userRepository.findByEmail(reqSupervisor.getEmail());
         supervisor.setUsername(supervisorUser.getUsername());
 
