@@ -8,6 +8,7 @@ import bks2101.kuraga.firstProject.exceptions.GroupNotFoundByCurator;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
 import bks2101.kuraga.firstProject.service.CuratorService;
+import bks2101.kuraga.firstProject.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,27 +17,40 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
+@RequestMapping("/supervisor")
 @RequiredArgsConstructor
 public class CuratorController {
     private final CuratorService curatorService;
-    @GetMapping("/curators/{curatorEmail}")
-    ResponseEntity<CuratorDto> getCuratorByName(@PathVariable String curatorEmail) throws UserNotFoundByUsernameException {
+    public final JwtTokenUtils jwtTokenUtils;
+
+    @GetMapping("/curator/")
+    ResponseEntity<CuratorDto> getCuratorInfo(@RequestHeader("Authorization") String authHeader) throws UserNotFoundByUsernameException {
+        String jwtToken = authHeader.substring(7);
+        String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
         return curatorService.getCuratorByEmail(curatorEmail);
     }
-    @GetMapping("/curators/{curatorEmail}/groups")
-    ResponseEntity<Set<GroupDto>> getCuratorGroupsByName(@PathVariable String curatorEmail) throws UserNotFoundByUsernameException {
+    @GetMapping("/curator/groups")
+    ResponseEntity<Set<GroupDto>> getCuratorGroups(@RequestHeader("Authorization") String authHeader) throws UserNotFoundByUsernameException {
+        String jwtToken = authHeader.substring(7);
+        String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
         return curatorService.getCuratorGroups(curatorEmail);
     }
-    @GetMapping("/curators/{curatorEmail}/groups/meetings")
-    ResponseEntity<Set<MeetingDto>> getCuratorMeetingsByName(@PathVariable String curatorEmail) throws UserNotFoundByUsernameException {
+    @GetMapping("/curator/groups/meetings")
+    ResponseEntity<Set<MeetingDto>> getCuratorMeetings(@RequestHeader("Authorization") String authHeader) throws UserNotFoundByUsernameException {
+        String jwtToken = authHeader.substring(7);
+        String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
         return curatorService.getCuratorMeetings(curatorEmail);
     }
-    @GetMapping("/curators/{curatorEmail}/{groupName}/")
-    ResponseEntity<GroupDto> getCuratorGroupByName(@PathVariable String curatorEmail, @PathVariable String groupName) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
+    @GetMapping("/curator/{groupName}/")
+    ResponseEntity<GroupDto> getCuratorGroup(@RequestHeader("Authorization") String authHeader, @PathVariable String groupName) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
+        String jwtToken = authHeader.substring(7);
+        String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
         return curatorService.getCuratorGroupByName(curatorEmail, groupName);
     }
-    @PostMapping("/curator/{curatorEmail}/{groupName}/meetings")
-    ResponseEntity<MeetingDto> createGroupMeetings(@PathVariable String curatorEmail, @PathVariable String groupName, @RequestBody MeetingDto meeting) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
+    @PostMapping("/curator/{groupName}/meetings")
+    ResponseEntity<MeetingDto> createGroupMeetings(@RequestHeader("Authorization") String authHeader, @PathVariable String groupName, @RequestBody MeetingDto meeting) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
+        String jwtToken = authHeader.substring(7);
+        String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
         return curatorService.createGroupMeetings(curatorEmail, groupName, meeting);
     }
 }

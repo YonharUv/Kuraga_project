@@ -45,21 +45,21 @@ public class CuratorService {
         curatorRepository.delete(curatorRepository.getByEmail(email));
         return ResponseEntity.ok("Куратор" + email + "успешно удален");
     }
-    public ResponseEntity<String> createCurator(String authHeader, CuratorDto curatorDto) throws UserAlreadyExistsException {
-        String jwtToken = authHeader.substring(7);
-        String email = jwtTokenUtils.getUsername(jwtToken);
-        Curator curator = new Curator();
-        curator.setFirst_name(curatorDto.getFirst_name());
-        curator.setLast_name(curatorDto.getLast_name());
-        curator.setPersonal_data(curatorDto.getPersonal_data());
-        curator.setEmail(email);
-        Supervisor supervisor = supervisorRepository.findByEmail(curatorDto.getSupervisor_email());
-        supervisor.addCurator(curator);
-        curator.setSupervisor(supervisor);
-        supervisorRepository.save(supervisor);
-        curatorRepository.save(curator);
-        return ResponseEntity.ok("Куратор успешно создан");
-    }
+//    public ResponseEntity<String> createCurator(String authHeader, CuratorDto curatorDto) throws UserAlreadyExistsException {
+//        String jwtToken = authHeader.substring(7);
+//        String email = jwtTokenUtils.getUsername(jwtToken);
+//        Curator curator = new Curator();
+//        curator.setFirst_name(curatorDto.getFirst_name());
+//        curator.setLast_name(curatorDto.getLast_name());
+//        curator.setPersonal_data(curatorDto.getPersonal_data());
+//        curator.setEmail(email);
+//        Supervisor supervisor = supervisorRepository.findByEmail(curatorDto.getSupervisor_email());
+//        supervisor.addCurator(curator);
+//        curator.setSupervisor(supervisor);
+//        supervisorRepository.save(supervisor);
+//        curatorRepository.save(curator);
+//        return ResponseEntity.ok("Куратор успешно создан");
+//    }
 
     public ResponseEntity<String> createCuratorAdmin(CuratorDto curatorDto) throws UserAlreadyExistsException {
         Curator curator = new Curator();

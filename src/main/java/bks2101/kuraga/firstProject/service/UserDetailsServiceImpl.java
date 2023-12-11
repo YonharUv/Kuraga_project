@@ -39,11 +39,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public ResponseEntity setRole(String email, Role role) {
-        ApplicationUser user = new ApplicationUser();
+    public ResponseEntity setRole(ApplicationUser user, Role role) {
         user.setRole(role);
         userRepository.save(user);
-        return ResponseEntity.ok("role succesfully setted");
+        return ResponseEntity.ok("Роль пользователя успешно изменена");
     }
 
     public ApplicationUser banUser(ApplicationUser user) {

@@ -2,6 +2,7 @@ package bks2101.kuraga.firstProject.controllers;
 
 import bks2101.kuraga.firstProject.dto.CuratorDto;
 import bks2101.kuraga.firstProject.dto.RegistrationUserDto;
+import bks2101.kuraga.firstProject.dto.RequestAddCurators;
 import bks2101.kuraga.firstProject.dto.RequestSupervisor;
 import bks2101.kuraga.firstProject.entitys.Role;
 import bks2101.kuraga.firstProject.exceptions.AppError;
@@ -23,29 +24,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-public class AdminController {
+public class AdminCuratorController {
 
     @Autowired
-    private final UserDetailsServiceImpl userService;
-    private final SupervisorService supervisorService;
     private final CuratorService curatorService;
 
-    private final UserRepository userRepository;
-
-    @PostMapping("/registration")
-    public ResponseEntity<?> createNewUser(@RequestBody RegistrationUserDto registrationUserDto) {
-        if (!registrationUserDto.getPassword().equals(registrationUserDto.getConfirmPassword())) {
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пароли не совпадают"), HttpStatus.BAD_REQUEST);
-        }
-        if (userRepository.findByUsername(registrationUserDto.getUsername()).isPresent()) {
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с указанным именем уже существует"), HttpStatus.BAD_REQUEST);
-        }
-        if (userRepository.getByEmail(registrationUserDto.getEmail()).isPresent()) {
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с такой почтой уже существует"), HttpStatus.BAD_REQUEST);
-        }
-        ApplicationUser user = userService.createNewUser(registrationUserDto);
-        return ResponseEntity.ok(user);
-    }
 
     @PostMapping("/curator/create")
     ResponseEntity<String> createCuratorAdmin(@RequestHeader("Authorization") String authHeader, @RequestBody CuratorDto curator) throws UserAlreadyExistsException {
@@ -61,23 +44,6 @@ public class AdminController {
     public ResponseEntity deleteCurator(@PathVariable String email) throws UserNotFoundByUsernameException {
         return curatorService.deleteCurator(email);
     }
-
-    @PostMapping("/supervisor/create")
-    public ResponseEntity createSupervisorAdmin(@RequestBody RequestSupervisor supervisor) throws UserAlreadyExistsException {
-        userService.setRole(supervisor.getEmail(), Role.SUPERVISOR);
-        return supervisorService.createSupervisorAdmin(supervisor);
-    }
-
-    @GetMapping("/supervisors")
-    ResponseEntity AllSupervisors() {
-        return supervisorService.getAllSupervisors();
-    }
-
-    @DeleteMapping("/supervisor/delete/{email}")
-    public ResponseEntity deleteSupervisor(@PathVariable String email) throws UserNotFoundByUsernameException {
-        return supervisorService.deleteSupervisor(email);
-    }
-
 
 //    TODO:
 //    - set role
