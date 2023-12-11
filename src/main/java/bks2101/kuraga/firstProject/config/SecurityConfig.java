@@ -35,6 +35,7 @@ public class SecurityConfig  {
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/supervisor/**").hasAnyAuthority("ADMIN", "SUPERVISOR")
                         .requestMatchers("/groups/**").hasAnyAuthority("ADMIN", "SUPERVISOR")
+                        .requestMatchers("/students/**").hasAnyAuthority("ADMIN", "SUPERVISOR", "USER")
                         .requestMatchers("/**").hasAnyAuthority("ADMIN", "USER", "SUPERVISOR")
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
