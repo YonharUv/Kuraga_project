@@ -38,13 +38,21 @@ public class CuratorService {
                 .toList();
         return ResponseEntity.ok(curatorDtoList);
     }
-    public ResponseEntity<String> deleteCuratorByEmail(String email) throws UserNotFoundByUsernameException {
-        if (!curatorRepository.existsByEmail(email)) {
-            throw new UserNotFoundByUsernameException("Куратор", email);
-        }
-        curatorRepository.delete(curatorRepository.getByEmail(email));
-        return ResponseEntity.ok("Куратор" + email + "успешно удален");
+
+    public ResponseEntity<List<CuratorDto>> getAllCuratorsByEmail(String email) {
+        var listCurators = curatorRepository.findAllByEmail(email);
+        List<CuratorDto> curatorDtoList = listCurators.stream()
+                .map(MappingUtil::mapToCuratorDto)
+                .toList();
+        return ResponseEntity.ok(curatorDtoList);
     }
+//    public ResponseEntity<String> deleteCuratorByEmail(String email) throws UserNotFoundByUsernameException {
+//        if (!curatorRepository.existsByEmail(email)) {
+//            throw new UserNotFoundByUsernameException("Куратор", email);
+//        }
+//        curatorRepository.delete(curatorRepository.getByEmail(email));
+//        return ResponseEntity.ok("Куратор" + email + "успешно удален");
+//    }
 //    public ResponseEntity<String> createCurator(String authHeader, CuratorDto curatorDto) throws UserAlreadyExistsException {
 //        String jwtToken = authHeader.substring(7);
 //        String email = jwtTokenUtils.getUsername(jwtToken);

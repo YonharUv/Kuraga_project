@@ -62,7 +62,7 @@ public class AdminUsersController {
     @PostMapping("/users/{id}/setSupervisor")
     public ResponseEntity setSupervisorUser(@PathVariable Long id) throws NotFoundByIdException {
         userService.setRole(userService.findUserByID(id), Role.SUPERVISOR);
-        return ResponseEntity.ok("Пользователь успешно забанен");
+        return ResponseEntity.ok("Привелегии пользователя успешно изменены");
     }
 
     @DeleteMapping("/user/delete/{id}")

@@ -46,13 +46,12 @@ public class AdminCuratorController {
     }
 
 //    TODO:
-//    - set role
-//    - ban
+//    done set role
+//    done ban
 //    done delete user (увольнение)
 //    done create user (регистрация)
 //    done check users
 //    - delete/create all content:
-//            - Group
 //            - Meetings(for all type of user)
 //            - Students
 }

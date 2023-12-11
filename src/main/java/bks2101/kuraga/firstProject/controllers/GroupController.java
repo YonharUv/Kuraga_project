@@ -14,31 +14,32 @@ import java.util.Set;
 import static java.lang.String.format;
 
 @RestController
+@RequestMapping("/groups")
 @RequiredArgsConstructor
 public class GroupController {
     private final GroupService groupService;
-    @GetMapping("/groups")
+    @GetMapping("/")
     ResponseEntity<Set<GroupDto>> getAllGroups() {
         return groupService.getAllGroups();
     }
-    @PostMapping("/groups")
+    @PostMapping("/")
     public ResponseEntity<GroupDto> createGroup(@RequestBody GroupDto group) throws UserAlreadyExistsException {
         return groupService.createGroup(group);
     }
-    @GetMapping("/groups/{name}")
-    public ResponseEntity<GroupDto> getGroupByUsername(@PathVariable String name) throws UserNotFoundByUsernameException {
-        return groupService.getGroupByName(name);
-    }
-    @DeleteMapping("/groups/{name}")
+    @DeleteMapping("/{name}")
     public ResponseEntity<String> deleteGroup(@PathVariable String name) throws UserNotFoundByUsernameException {
         return groupService.deleteGroupByName(name);
     }
-    @PostMapping("/groups/{name}")
+    @PostMapping("/{name}")
     public ResponseEntity<GroupDto> updateGroupByName(@PathVariable String name, @RequestBody GroupDto group) throws UserNotFoundByUsernameException, UserAlreadyExistsException {
         return groupService.updateGroup(name, group);
     }
-    @GetMapping("groups/{name}/students")
+    @GetMapping("/{name}/students")
     public ResponseEntity<Set<StudentDto>> getGroupStudentsByName(@PathVariable String groupName) throws UserNotFoundByUsernameException {
         return groupService.getGroupStudents(groupName);
+    }
+    @GetMapping("/{name}")
+    public ResponseEntity<GroupDto> getGroupByUsername(@PathVariable String name) throws UserNotFoundByUsernameException {
+        return groupService.getGroupByName(name);
     }
 }
