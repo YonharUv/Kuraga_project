@@ -115,7 +115,11 @@ public class GroupService {
         if (!groupRepository.existsByName(groupName)) {
             throw new UserNotFoundByUsernameException("Группа", groupName);
         }
-        groupRepository.deleteByName(groupName);
+        Group group = groupRepository.findByName(groupName);
+        group.setCurator(null);
+        studentRepository.deleteAll(group.getStudents());
+        meetingRepository.deleteAll(group.getMeetings());
+        groupRepository.delete(group);
         return ResponseEntity.ok("Группа " + groupName + " успешна удалена");
     }
 

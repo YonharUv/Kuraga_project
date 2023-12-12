@@ -32,8 +32,8 @@ public class AdminSupervisorController {
     private final UserRepository userRepository;
 
     @PostMapping("/supervisor/create")
-    public ResponseEntity createSupervisorAdmin(@RequestBody RequestSupervisor supervisor) throws UserAlreadyExistsException {
-        userService.setRole(userRepository.findByEmail(supervisor.getEmail()), Role.SUPERVISOR);
+    public ResponseEntity createSupervisorAdmin(@RequestBody RequestSupervisor supervisor) throws UserAlreadyExistsException, UserNotFoundByUsernameException {
+        userService.setRole(userService.findUserByEmail(supervisor.getEmail()), Role.SUPERVISOR);
         return supervisorService.createSupervisorAdmin(supervisor);
     }
     @GetMapping("/supervisors")

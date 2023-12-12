@@ -1,10 +1,12 @@
 package bks2101.kuraga.firstProject.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -12,7 +14,8 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class MeetingDto {
-    private Date date;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime date;
     private String topic;
     private String location;
 }

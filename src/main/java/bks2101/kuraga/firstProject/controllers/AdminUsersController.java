@@ -60,7 +60,7 @@ public class AdminUsersController {
     }
 
     @PostMapping("/users/{id}/setSupervisor")
-    public ResponseEntity setSupervisorUser(@PathVariable Long id) throws NotFoundByIdException {
+    public ResponseEntity setSupervisorUser(@PathVariable Long id) throws NotFoundByIdException, UserNotFoundByUsernameException {
         userService.setRole(userService.findUserByID(id), Role.SUPERVISOR);
         return ResponseEntity.ok("Привелегии пользователя успешно изменены");
     }

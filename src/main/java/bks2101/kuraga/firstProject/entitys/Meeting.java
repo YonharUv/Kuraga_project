@@ -3,6 +3,7 @@ package bks2101.kuraga.firstProject.entitys;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -16,7 +17,7 @@ public class Meeting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date date;
+    private LocalDateTime date;
     private String topic;
     private String location;
     @ManyToOne

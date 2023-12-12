@@ -39,12 +39,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public ResponseEntity setRole(ApplicationUser user, Role role) {
+    public ResponseEntity setRole(ApplicationUser user, Role role) throws UserNotFoundByUsernameException {
         user.setRole(role);
         userRepository.save(user);
         return ResponseEntity.ok("Роль пользователя успешно изменена");
     }
-
+    public ApplicationUser findUserByEmail(String email) throws UserNotFoundByUsernameException {
+        if (!userRepository.existsByEmail(email)) {
+            throw new UserNotFoundByUsernameException("Пользователь", email);
+        }
+        return userRepository.findByEmail(email);
+    }
+    public ApplicationUser findUserByID(Long id) throws NotFoundByIdException {
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundByIdException("Пользователя",id);
+        }
+        return userRepository.getById(id);
+    }
     public ApplicationUser banUser(ApplicationUser user) {
         user.setRole(Role.BANNED);
         return userRepository.save(user);
@@ -65,12 +76,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         return ResponseEntity.ok(userRepository.findById(id));
     }
-    public ApplicationUser findUserByID(Long id) throws NotFoundByIdException {
-        if (!userRepository.existsById(id)) {
-            throw new NotFoundByIdException("Пользователя",id);
-        }
-        return userRepository.getById(id);
-    }
+
     public ResponseEntity<List<ApplicationUser>> getAllUser() {
         return ResponseEntity.ok(userRepository.findAll());
     }

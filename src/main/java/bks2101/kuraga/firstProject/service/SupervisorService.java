@@ -129,6 +129,14 @@ public class SupervisorService {
             throw new UserNotFoundByUsernameException("Руководитель кураторов", email);
         }
         Supervisor supervisor = supervisorRepository.findByEmail(email);
+        Supervisor fictionalSupervisor = supervisorRepository.findByEmail("vis0@example.com");
+        var curators = supervisor.getCurators();
+        for(Curator curator : curators) {
+            curator.setSupervisor(fictionalSupervisor);
+            curatorRepository.save(curator);
+            fictionalSupervisor.addCurator(curator);
+            supervisorRepository.save(fictionalSupervisor);
+        }
         supervisorRepository.delete(supervisor);
         return ResponseEntity.ok(format("Руководитель кураторов %s успешно удален", email));
     }

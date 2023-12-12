@@ -31,7 +31,7 @@ public class AdminCuratorController {
 
 
     @PostMapping("/curator/create")
-    ResponseEntity<String> createCuratorAdmin(@RequestHeader("Authorization") String authHeader, @RequestBody CuratorDto curator) throws UserAlreadyExistsException {
+    ResponseEntity<String> createCuratorAdmin(@RequestBody CuratorDto curator) throws UserAlreadyExistsException {
         return curatorService.createCuratorAdmin(curator);
     }
 
