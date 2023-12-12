@@ -2,6 +2,7 @@ package bks2101.kuraga.firstProject.controllers;
 
 import bks2101.kuraga.firstProject.dto.JwtRequest;
 import bks2101.kuraga.firstProject.dto.JwtResponse;
+import bks2101.kuraga.firstProject.dto.ResetPassRequest;
 import bks2101.kuraga.firstProject.entitys.ApplicationUser;
 import bks2101.kuraga.firstProject.exceptions.AppError;
 import bks2101.kuraga.firstProject.repository.UserRepository;
@@ -49,8 +50,28 @@ public class AuthController {
         boolean isActivated = userService.activateUser(code);
 
         if (!isActivated) {
-            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Код активации не найден"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Не корректный код активации"), HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok("Пользователь успешно активирован");
+    }
+
+    @PostMapping("/forgotPass/{email}")
+    public ResponseEntity<?> forgotPass(@PathVariable String email) {
+        boolean addToken = userService.forgotPass(email);
+
+        if (!addToken) {
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким email не найден"), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok("Письмо для сброса пароля выслано на указанную почту");
+    }
+
+    @PostMapping("/forgotPass/{token}/resetPass")
+    public ResponseEntity<?> resetPass(@PathVariable String token, @RequestBody ResetPassRequest resetRequest) {
+        boolean reset = userService.resetPass(token, resetRequest.getPassword());
+
+        if (!reset) {
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Не корректный токен сброса пароля"), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok("Пароль был успешно изменён");
     }
 }

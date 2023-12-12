@@ -18,9 +18,9 @@ public class ApplicationUser {
     private Long id;
     private String username;
     private String password;
-//    private boolean activate;
     private String email;
     private String activationCode;
+    private String resetToken;
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -47,14 +47,6 @@ public class ApplicationUser {
     public void setPassword(String password) {
         this.password = password;
     }
-
-//    public boolean isActivate() {
-//        return activate;
-//    }
-//
-//    public void setActivate(boolean activate) {
-//        this.activate = activate;
-//    }
 
     public String getEmail() {
         return email;

@@ -33,6 +33,7 @@ public class SecurityConfig  {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/auth").permitAll()
                         .requestMatchers("/activate/*").permitAll()
+                        .requestMatchers("/forgotPass/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/supervisor/**").hasAnyAuthority("ADMIN", "SUPERVISOR")
                         .requestMatchers("/groups/**").hasAnyAuthority("ADMIN", "SUPERVISOR")

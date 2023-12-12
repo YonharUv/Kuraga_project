@@ -1,6 +1,7 @@
 package bks2101.kuraga.firstProject.service;
 
 import bks2101.kuraga.firstProject.dto.RegistrationUserDto;
+import bks2101.kuraga.firstProject.exceptions.AppError;
 import bks2101.kuraga.firstProject.exceptions.NotFoundByIdException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
 import bks2101.kuraga.firstProject.entitys.ApplicationUser;
@@ -9,6 +10,7 @@ import bks2101.kuraga.firstProject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -56,6 +58,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         mailSender.send(user.getEmail(), "Activation code", message);
         return ResponseEntity.ok("Пользователь успешно создан");
+    }
+
+    public boolean sendResetMessage(ApplicationUser user) {
+        try{
+            String message = String.format(
+                    "Hello, %s! \n" +
+                            "To reset password you should visit next link: http://localhost:1000/forgotPass/%s/resetPass",
+                    user.getUsername(),
+                    user.getResetToken()
+            );
+
+            mailSender.send(user.getEmail(), "Reset token", message);
+            return true;
+        } catch (BadCredentialsException e){
+            return false;
+        }
+
     }
 
     public ResponseEntity setRole(ApplicationUser user, Role role) {
@@ -127,6 +146,29 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         user.setActivationCode(null);
 
+        userRepository.save(user);
+
+        return true;
+    }
+    public boolean forgotPass(String email) {
+        ApplicationUser user = userRepository.findByEmail(email);
+        if (user == null) {
+            return false;
+        }
+        user.setResetToken(UUID.randomUUID().toString());
+        userRepository.save(user);
+        sendResetMessage(user);
+
+        return true;
+    }
+
+    public boolean resetPass(String token, String password) {
+        ApplicationUser user = userRepository.findByResetToken(token);
+        if (user == null) {
+            return false;
+        }
+        user.setResetToken(null);
+        user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
 
         return true;
