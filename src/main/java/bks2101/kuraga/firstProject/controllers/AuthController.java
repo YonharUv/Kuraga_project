@@ -13,9 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static java.lang.String.format;
 
@@ -35,5 +33,14 @@ public class AuthController {
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtils.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
+    }
+    @GetMapping("/activate/{code}")
+    public ResponseEntity<?> activate(@PathVariable String code) {
+        boolean isActivated = userService.activateUser(code);
+
+        if (!isActivated) {
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Код активации не найден"), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok("Пользователь успешно активирован");
     }
 }

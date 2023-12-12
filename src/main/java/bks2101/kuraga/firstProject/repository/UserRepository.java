@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
     ApplicationUser findByEmail(String email);
     Optional<ApplicationUser> findById(Long id);
     ApplicationUser getById(Long id);
+
+    ApplicationUser findByActivationCode(String code);
 }

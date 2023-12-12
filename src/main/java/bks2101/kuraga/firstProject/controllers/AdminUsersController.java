@@ -39,7 +39,8 @@ public class AdminUsersController {
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пользователь с такой почтой уже существует"), HttpStatus.BAD_REQUEST);
         }
         ApplicationUser user = userService.createNewUser(registrationUserDto);
-        return ResponseEntity.ok(user);
+
+        return userService.sendHelloMessage(user);
     }
     @GetMapping("/users")
     ResponseEntity getAllUsers() {

@@ -7,6 +7,7 @@ import bks2101.kuraga.firstProject.entitys.ApplicationUser;
 import bks2101.kuraga.firstProject.entitys.Role;
 import bks2101.kuraga.firstProject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,15 +17,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.lang.String.format;
 
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
+    @Autowired
     private final UserRepository userRepository;
+    @Autowired
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private MailService mailSender;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
@@ -36,7 +42,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         user.setEmail(registrationUserDto.getEmail());
         user.setPassword(passwordEncoder.encode(registrationUserDto.getPassword()));
         user.setRole(Role.USER);
+        user.setActivationCode(UUID.randomUUID().toString());
         return userRepository.save(user);
+    }
+
+    public ResponseEntity<?> sendHelloMessage(ApplicationUser user) {
+        String message = String.format(
+                "Hello, %s! \n" +
+                        "Welcome to Kuraga. Please, visit next link: http://localhost:1000/activate/%s",
+                user.getUsername(),
+                user.getActivationCode()
+        );
+
+        mailSender.send(user.getEmail(), "Activation code", message);
+        return ResponseEntity.ok("Пользователь успешно создан");
     }
 
     public ResponseEntity setRole(ApplicationUser user, Role role) {
@@ -99,5 +118,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             applicationUser.setRole(newUser.getRole());
             return userRepository.save(applicationUser);
         }));
+    }
+
+    public boolean activateUser(String code) {
+        ApplicationUser user = userRepository.findByActivationCode(code);
+        if (user == null) {
+            return false;
+        }
+        user.setActivationCode(null);
+
+        userRepository.save(user);
+
+        return true;
     }
 }
