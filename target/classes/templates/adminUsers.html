@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Админ Панель</title>
+</head>
+<body>
+
+<h2>Регистрация нового пользователя</h2>
+<form th:action="@{/registration}" method="post" th:object="${registrationUserDto}">
+    <label for="username">Имя пользователя:</label>
+    <input type="text" id="username" th:field="*{username}" required/><br/>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" th:field="*{email}" required/><br/>
+
+    <label for="password">Пароль:</label>
+    <input type="password" id="password" th:field="*{password}" required/><br/>
+
+    <label for="confirmPassword">Подтверждение пароля:</label>
+    <input type="password" id="confirmPassword" th:field="*{confirmPassword}" required/><br/>
+
+    <button type="submit">Зарегистрировать</button>
+</form>
+
+<h2>Получить всех пользователей</h2>
+<a th:href="@{/users}">Получить всех пользователей</a>
+
+<h2>Получить пользователя по ID</h2>
+<form th:action="@{/users/{id}}" method="get">
+    <label for="userId">ID пользователя:</label>
+    <input type="text" id="userId" name="id" required/><br/>
+    <button type="submit">Получить пользователя</button>
+</form>
+
+<h2>Получить пользователя по имени пользователя</h2>
+<form th:action="@{/users/find/{username}}" method="get">
+    <label for="searchUsername">Имя пользователя:</label>
+    <input type="text" id="searchUsername" name="username" required/><br/>
+    <button type="submit">Получить пользователя</button>
+</form>
+
+<h2>Забанить пользователя</h2>
+<form th:action="@{/users/{id}/ban}" method="post">
+    <label for="banUserId">ID пользователя:</label>
+    <input type="text" id="banUserId" name="id" required/><br/>
+    <button type="submit">Забанить пользователя</button>
+</form>
+
+<h2>Установить привилегии "Supervisor" пользователю</h2>
+<form th:action="@{/users/{id}/setSupervisor}" method="post">
+    <label for="supervisorUserId">ID пользователя:</label>
+    <input type="text" id="supervisorUserId" name="id" required/><br/>
+    <button type="submit">Установить привилегии Supervisor</button>
+</form>
+
+<h2>Удалить пользователя</h2>
+<form th:action="@{/user/delete/{id}}" method="delete">
+    <label for="deleteUserId">ID пользователя:</label>
+    <input type="text" id="deleteUserId" name="id" required/><br/>
+    <button type="submit">Удалить пользователя</button>
+</form>
+
+</body>
+</html>

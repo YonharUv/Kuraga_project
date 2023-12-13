@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Админ Панель</title>
+    <link rel="stylesheet" href="adminUsers.css">
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Регистрация нового пользователя</h2>
+    <form th:action="@{/registration}" method="post" th:object="${registrationUserDto}">
+        <div class="input-container">
+            <input type="text" id="username" th:field="*{username}" required placeholder=" "/>
+            <label for="username">Имя пользователя:</label>
+        </div>
+        <div class="input-container">
+            <input type="email" id="email" th:field="*{email}" required placeholder=" "/>
+            <label for="email">Email:</label>
+        </div>
+        <div class="input-container">
+            <input type="password" id="password" th:field="*{password}" required placeholder=" "/>
+            <label for="password">Пароль:</label>
+        </div>
+        <div class="input-container">
+            <input type="password" id="confirmPassword" th:field="*{confirmPassword}" required placeholder=" "/>
+            <label for="confirmPassword">Подтверждение пароля:</label>
+        </div>
+        <button type="submit">Зарегистрировать</button>
+    </form>
+</div>
+
+<div class="form-row">
+    <div class="form-container">
+        <h2>Получить всех пользователей</h2>
+        <a th:href="@{/users}">Получить всех пользователей</a>
+    </div>
+
+    <div class="form-container">
+        <h2>Получить пользователя по ID</h2>
+        <form th:action="@{/users/{id}}" method="get">
+            <div class="input-container">
+                <label for="userId">ID пользователя:</label>
+                <input type="text" id="userId" name="id" required placeholder=" "/><br/>
+            </div>
+            <button type="submit">Получить пользователя</button>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h2>Получить пользователя по имени пользователя</h2>
+        <form th:action="@{/users/find/{username}}" method="get">
+            <div class="input-container">
+                <label for="searchUsername">Имя пользователя:</label>
+                <input type="text" id="searchUsername" name="username" required placeholder=" "/><br/>
+            </div>
+            <button type="submit">Получить пользователя</button>
+        </form>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-container">
+        <h2>Забанить пользователя</h2>
+        <form th:action="@{/users/{id}/ban}" method="post">
+            <div class="input-container">
+                <label for="banUserId">ID пользователя:</label>
+                <input type="text" id="banUserId" name="id" required placeholder=" "/><br/>
+            </div>
+            <button type="submit">Забанить пользователя</button>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h2>Установить привилегии "Supervisor" пользователю</h2>
+        <form th:action="@{/users/{id}/setSupervisor}" method="post">
+            <div class="input-container">
+                <label for="supervisorUserId">ID пользователя:</label>
+                <input type="text" id="supervisorUserId" name="id" required placeholder=" "/><br/>
+            </div>
+            <button type="submit">Установить привилегии Supervisor</button>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h2>Удалить пользователя</h2>
+        <form th:action="@{/user/delete/{id}}" method="delete">
+            <div class="input-container">
+                <label for="deleteUserId">ID пользователя:</label>
+                <input type="text" id="deleteUserId" name="id" required placeholder=" "/><br/>
+            </div>
+            <button type="submit">Удалить пользователя</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
