@@ -39,6 +39,7 @@ public class SecurityConfig  {
                         .requestMatchers("/groups/**").hasAnyAuthority("ADMIN", "SUPERVISOR")
                         .requestMatchers("/students/**").hasAnyAuthority("ADMIN", "SUPERVISOR", "USER")
                         .requestMatchers("/**").hasAnyAuthority("ADMIN", "USER", "SUPERVISOR")
+//                        .requestMatchers("/**").permitAll()
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
