@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -16,11 +17,11 @@
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required="required"/>
     <br/>
-
+    <div id="errorMessage"></div>
     <button type="button" onclick="submitForm()">Login</button>
 </form>
 
-<div id="errorMessage" style="color: red;"></div>
+
 
 
 <script>
