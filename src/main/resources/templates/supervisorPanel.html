@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Домашняя страница супервизора</title>
+    <link rel="stylesheet" href="Panel.css">
+</head>
+<body>
+
+<nav class="nav-container">
+    <h2>Информация о супервизоре</h2>
+    <div class="info">
+        <p>Имя: <span th:text="${supervisorInfo.name}"></span></p>
+        <p>Email: <span th:text="${supervisorInfo.email}"></span></p>
+    </div>
+</nav>
+
+<!-- Форма для вызова маппинга /curators/{curatorEmail}/groups -->
+<div class="form-container">
+    <form th:action="@{/curators/{curatorEmail}/groups}" method="get">
+        <div class="input-container">
+            <h2>Получить группы куратора</h2>
+            <label for="curatorEmailForGroups"></label>
+            <input type="text" id="curatorEmailForGroups" name="curatorEmail" required placeholder="Email куратора"/>
+            <button type="submit" class="align-right">Получить группы куратора</button>
+        </div>
+    </form>
+</div>
+
+
+
+<!-- Форма для вызова маппинга /curators/{curatorEmail} -->
+<div class="form-container">
+    <form th:action="@{/curators/{curatorEmail}}" method="get">
+        <div class="input-container">
+            <h2>Получить информацию о кураторе</h2>
+            <label for="curatorEmail"></label>
+            <input type="text" id="curatorEmail" name="curatorEmail" required placeholder="Email куратора"/>
+            <button type="submit" class="align-right">Получить информацию о кураторе</button>
+        </div>
+    </form>
+</div>
+
+<!-- Форма для вызова маппинга /curators -->
+<div class="form-container">
+    <form th:action="@{/curators}" method="get">
+        <div class="input-container">
+            <h2>Получить всех кураторов</h2>
+            <button type="submit" class="align-right">Получить всех кураторов</button>
+        </div>
+    </form>
+</div>
+
+<!-- Форма для вызова маппинга /curator/{curatorEmail}/groups/meetings -->
+<div class="form-container">
+    <form th:action="@{/curator/{curatorEmail}/groups/meetings}" method="get">
+        <div class="input-container">
+            <h2>Получить встречи группы куратора</h2>
+            <label for="curatorEmailForMeetings"></label>
+            <input type="text" id="curatorEmailForMeetings" name="curatorEmail" required placeholder="Email куратора"/>
+            <button type="submit" class="align-right">Получить встречи группы куратора</button>
+        </div>
+    </form>
+</div>
+
+<!-- Добавьте другие формы по необходимости -->
+
+</body>
+</html>

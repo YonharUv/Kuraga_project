@@ -2,6 +2,10 @@
     color: red;
     padding: 8px;
 }
+#successMessage{
+    color: green;
+    padding: 8px;
+}
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -14,7 +18,7 @@ h2 {
     color: #333;
 }
 
-#loginForm {
+#loginForm, #forgotPass, #resetPass {
     max-width: 400px;
     margin: 20px auto;
     background: #fff;
@@ -40,13 +44,6 @@ input {
     color: #333;
 }
 
-/* Стили для перемещения label на верхнюю границу input */
-input:focus + label,
-input:not(:placeholder-shown) + label {
-    transform: translateY(-20px);
-    font-size: 12px;
-    color: #4caf50; /* Цвет текста, когда в фокусе или когда введены данные */
-}
 
 /* Возврат label на место, если поле ввода пусто */
 input:placeholder-shown + label {
