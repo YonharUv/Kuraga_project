@@ -4,57 +4,84 @@
     <meta charset="UTF-8"/>
     <title>Домашняя страница куратора</title>
     <!-- Добавьте вашу стилевую таблицу или подключение к стилям -->
+    <link rel="stylesheet" href="Panel.css">
 </head>
 <body>
 
-<!-- Секция с информацией о кураторе -->
-<div style="text-align: center; margin-top: 20px;">
+
+<nav class="nav-container">
     <h2>Информация о кураторе</h2>
-    <div th:if="${curatorInfo}">
-        <p>Email: <span th:text="${curatorInfo.email}"></span></p>
+    <div class="info">
         <p>Имя: <span th:text="${curatorInfo.name}"></span></p>
-        <!-- Добавьте другие поля, которые вы хотите отобразить -->
+        <p>Email: <span th:text="${curatorInfo.email}"></span></p>
     </div>
-</div>
+</nav>
+
+
 
 <!-- Форма для вызова маппинга /groups -->
-<form th:action="@{/groups}" method="get">
-    <button type="submit">Получить группы куратора</button>
-</form>
+<div class="form-container">
+    <form th:action="@{/groups}" method="get">
+        <button type="submit" class="align-right">Получить группы куратора</button>
+    </form>
+</div>
 
 <!-- Форма для вызова маппинга /meetings -->
-<form th:action="@{/meetings}" method="get">
-    <button type="submit">Получить встречи куратора</button>
-</form>
+<div class="form-container">
+    <form th:action="@{/meetings}" method="get">
+        <button type="submit" class="align-right">Получить встречи куратора</button>
+    </form>
+</div>
 
 <!-- Форма для вызова маппинга /{groupName} -->
-<form th:action="@{/{groupName}}" method="get">
-    <label for="groupName">Название группы:</label>
-    <input type="text" id="groupName" name="groupName" required/><br/>
-    <button type="submit">Получить информацию о группе</button>
-</form>
+<div class="form-container">
+    <form th:action="@{/{groupName}}" method="get">
+        <div class="input-container">
+            <h2>Получить информацию о группе</h2>
+            <label for="groupName"></label>
+            <input type="text" id="groupName" name="groupName" required placeholder="Название группы"/>
+            <button type="submit" class="align-right">Получить информацию о группе</button>
+        </div>
+    </form>
+</div>
 
 <!-- Форма для вызова маппинга /{groupName}/meetings -->
-<form th:action="@{/{groupName}/meetings}" method="post">
-    <label for="createMeetingGroupName">Название группы:</label>
-    <input type="text" id="createMeetingGroupName" name="groupName" required/><br/>
-    <!-- Добавьте другие поля для встречи по необходимости -->
-    <button type="submit">Создать встречу для группы</button>
-</form>
+<div class="form-container">
+    <form th:action="@{/{groupName}/meetings}" method="post">
+        <div class="input-container">
+            <h2>Создать встречу для группы</h2>
+            <label for="createMeetingGroupName"></label>
+            <input type="text" id="createMeetingGroupName" name="groupName" required placeholder="Название группы"/>
+            <!-- Добавьте другие поля для встречи по необходимости -->
+            <button type="submit" class="align-right">Создать встречу для группы</button>
+        </div>
+    </form>
+</div>
 
 <!-- Форма для вызова маппинга /groups/{name}/students -->
-<form th:action="@{/groups/{name}/students}" method="get">
-    <label for="groupStudentsName">Название группы:</label>
-    <input type="text" id="groupStudentsName" name="name" required/><br/>
-    <button type="submit">Получить студентов группы</button>
-</form>
+<div class="form-container">
+    <form th:action="@{/groups/{name}/students}" method="get">
+        <div class="input-container">
+            <h2>Получить студентов группы</h2>
+            <label for="groupStudentsName"></label>
+            <input type="text" id="groupStudentsName" name="name" required placeholder="Название группы"/>
+            <button type="submit" class="align-right">Получить студентов группы</button>
+        </div>
+    </form>
+</div>
 
 <!-- Форма для вызова маппинга /groups/{name} -->
-<form th:action="@{/groups/{name}}" method="get">
-    <label for="groupInfoName">Название группы:</label>
-    <input type="text" id="groupInfoName" name="name" required/><br/>
-    <button type="submit">Получить информацию о группе</button>
-</form>
+<div class="form-container">
+    <form th:action="@{/groups/{name}}" method="get">
+        <div class="input-container">
+            <h2>Получить информацию о группе</h2>
+            <label for="groupInfoName"></label>
+            <input type="text" id="groupInfoName" name="name" required placeholder="Название группы"/>
+            <button type="submit" class="align-right">Получить информацию о группе</button>
+        </div>
+    </form>
+</div>
+
 
 <!-- Добавьте другие формы по необходимости -->
 

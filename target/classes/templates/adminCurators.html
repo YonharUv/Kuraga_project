@@ -3,67 +3,151 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Админ Панель</title>
+    <link th:href="@{/css/adminUsers.css}" rel="stylesheet" />
     <!-- Подключение jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
+<nav>
+    <a href="/admin/panel/users">Users</a>
+    <a href="/admin/panel/curators">Curators</a>
+    <a href="/admin/panel/supervisors">Supervisors</a>
+    <a href="#logout">Log out</a>
+</nav>
 
-<h2>Создать куратора</h2>
-<form id="createCuratorForm">
-    <!--<label for="curatorEmail">Email куратора:</label>-->
-    <!--<input type="email" id="curatorEmail" th:field="*{email}" required/><br/>-->
-    <!-- Добавьте другие поля по необходимости -->
+<div class="form-container">
+    <h2>Создать куратора</h2>
+    <form id="createCuratorForm">
+        <div class="input-container">
+            <label for="createCuratorEmail">Email куратора:</label>
+            <input type="text" id="createCuratorEmail" name="email" required placeholder=" "/><br/>
+        </div>
+        <div class="input-container">
+            <label for="createCuratorFirstName">Имя куратора:</label>
+            <input type="text" id="createCuratorFirstName" name="first_name" required placeholder=" "/><br/>
+        </div>
+        <div class="input-container">
+            <label for="createCuratorLastName">Фамилия куратора:</label>
+            <input type="text" id="createCuratorLastName" name="last_name" required placeholder=" "/><br/>
+        </div>
+        <div class="input-container">
+            <label for="createCuratorPersonalData">Личные данные куратора:</label>
+            <input type="text" id="createCuratorPersonalData" name="personal_data" required placeholder=" "/><br/>
+        </div>
+        <div class="input-container">
+            <label for="createCuratorSupervisorEmail">Email супервизора:</label>
+            <input type="text" id="createCuratorSupervisorEmail" name="supervisor_email" required placeholder=" "/><br/>
+        </div>
+        <button type="button" onclick="createCurator()" class="align-right">Создать куратора</button>
+    </form>
+</div>
 
-    <button type="button" onclick="createCurator()">Создать куратора</button>
-</form>
+<div id="createCuratorsResult"></div>
 
-<h2>Получить всех кураторов</h2>
-<button onclick="getAllCurators()">Получить всех кураторов</button>
+<div class="form-container">
+    <h2>Получить всех кураторов</h2>
+    <button type="button" onclick="getAllCurators()" class="align-right">Получить всех кураторов</button>
+</div>
 
 <!-- Результат запроса будет отображен здесь -->
-<div id="curatorsResult"></div>
+<div id="allCuratorsResult"></div>
 
-<h2>Удалить куратора</h2>
-<form id="deleteCuratorForm">
-    <label for="deleteCuratorEmail">Email куратора:</label>
-    <input type="text" id="deleteCuratorEmail" name="email" required/><br/>
-    <button type="button" onclick="deleteCurator()">Удалить куратора</button>
-</form>
+<div class="form-container">
+    <h2>Удалить куратора</h2>
+    <form id="deleteCuratorForm">
+        <div class="input-container">
+            <label for="deleteCuratorEmail">Email куратора:</label>
+            <input type="text" id="deleteCuratorEmail" name="email" required placeholder=" "/><br/>
+        </div>
+        <button type="button" onclick="deleteCurator()" class="align-right">Удалить куратора</button>
+    </form>
+</div>
+
+<div id="deleteCuratorResultContainer"></div>
+
 
 <script th:inline="javascript">
-    /* Обработчик клика на кнопку для создания куратора */
-    function createCurator() {
-        var curatorData = $('#createCuratorForm').serialize();
-        $.post('/curator/create', curatorData, function(response) {
-            /* Отображение результата в блоке с id="curatorsResult" */
-            $('#curatorsResult').html(response);
-        });
-    }
-
-    /* Обработчик клика на кнопку для получения всех кураторов */
-    function getAllCurators() {
-        $.get('/curators', function(data) {
-            /* Отображение результата в блоке с id="curatorsResult" */
-            $('#curatorsResult').html(data);
-        });
-    }
-
-    /* Обработчик клика на кнопку для удаления куратора */
     function deleteCurator() {
         var curatorEmail = $('#deleteCuratorEmail').val();
         $.ajax({
-            url: '/curator/delete/' + curatorEmail,
+            url: '/admin/curator/delete/' + curatorEmail,
             type: 'DELETE',
             success: function(response) {
-                /* Отображение результата в блоке с id="curatorsResult" */
-                $('#curatorsResult').html(response);
+                $('#deleteCuratorResultContainer').html(response);
             },
             error: function(error) {
-                /* В случае ошибки выводим сообщение об ошибке */
-                $('#curatorsResult').html('Ошибка: ' + error.responseText);
+                $('#deleteCuratorResultContainer').html('Ошибка: ' + error.responseText);
             }
         });
     }
+
+    function createCurator() {
+        var curatorData = {
+            "email": $('#createCuratorEmail').val(),
+            "first_name": $('#createCuratorFirstName').val(),
+            "last_name": $('#createCuratorLastName').val(),
+            "personal_data": $('#createCuratorPersonalData').val(),
+            "supervisor_email": $('#createCuratorSupervisorEmail').val()
+        };
+
+        $.ajax({
+            url: '/admin/curator/create',
+            type: 'POST',
+            contentType: 'application/json;charset=UTF-8',
+            data: JSON.stringify(curatorData),
+            success: function(response) {
+                var responseContainer = $('#createCuratorsResult');
+                responseContainer.html('');
+
+                if (response.status === '200') {
+                    $('#createCuratorsResult').html(response);
+                } else {
+                    var errorMessage = $('<p>').text('Error: ' + response.message);
+                    errorMessage.addClass('error');
+                    responseContainer.html('Ошибка: ' + response);
+                }
+            },
+            error: function(error) {
+                $('#createCuratorsResult').html('Error: ' + error.responseText);
+            }
+        });
+    }
+
+    function getAllCurators() {
+        $.ajax({
+            url: '/admin/curators',
+            type: 'GET',
+            contentType: 'application/json;charset=UTF-8',
+            success: function(curators) {
+                var curatorsContainer = $('#allCuratorsResult');
+
+                var tableHtml = '<table border="1">';
+                tableHtml += '<tr>';
+                for (var key in curators[0]) {
+                    tableHtml += '<th>' + key + '</th>';
+                }
+                tableHtml += '</tr>';
+
+                $.each(curators, function(i, curator) {
+                    tableHtml += '<tr>';
+                    for (var key in curator) {
+                        tableHtml += '<td>' + curator[key] + '</td>';
+                    }
+                    tableHtml += '</tr>';
+                });
+
+                tableHtml += '</table>';
+
+                curatorsContainer.html(tableHtml);
+            },
+            error: function(error) {
+                $('#allCuratorsResult').html('Error: ' + error.responseText);
+            }
+        });
+    }
+
+
+
 </script>
 
 </body>
