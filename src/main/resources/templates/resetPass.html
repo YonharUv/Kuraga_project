@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Восстановление пароля</title>
+    <!-- Добавьте вашу стилевую таблицу или подключение к стилям -->
+</head>
+<body>
+
+<div style="text-align: center; margin-top: 50px;">
+    <h2>Восстановление пароля</h2>
+
+    <!-- Форма для ввода нового пароля -->
+    <form th:action="@{/forgotPass/{token}/resetPass}" method="post">
+        <label for="password">Введите новый пароль:</label>
+        <input type="password" id="password" name="password" required/><br/>
+
+        <label for="confirmPassword">Подтвердите новый пароль:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required/><br/>
+
+        <input type="hidden" name="token" th:value="${token}"/> <!-- передача токена в запросе -->
+
+        <button type="submit">Сохранить новый пароль</button>
+    </form>
+
+    <!-- Отображение ошибки, если токен не корректный -->
+    <div th:if="${errorMessage}">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <!-- Сообщение об успешном изменении пароля -->
+    <div th:if="${successMessage}">
+        <p th:text="${successMessage}"></p>
+    </div>
+</div>
+
+</body>
+</html>

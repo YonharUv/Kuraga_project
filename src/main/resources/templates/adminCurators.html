@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Админ Панель</title>
+    <!-- Подключение jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+<h2>Создать куратора</h2>
+<form id="createCuratorForm">
+    <!--<label for="curatorEmail">Email куратора:</label>-->
+    <!--<input type="email" id="curatorEmail" th:field="*{email}" required/><br/>-->
+    <!-- Добавьте другие поля по необходимости -->
+
+    <button type="button" onclick="createCurator()">Создать куратора</button>
+</form>
+
+<h2>Получить всех кураторов</h2>
+<button onclick="getAllCurators()">Получить всех кураторов</button>
+
+<!-- Результат запроса будет отображен здесь -->
+<div id="curatorsResult"></div>
+
+<h2>Удалить куратора</h2>
+<form id="deleteCuratorForm">
+    <label for="deleteCuratorEmail">Email куратора:</label>
+    <input type="text" id="deleteCuratorEmail" name="email" required/><br/>
+    <button type="button" onclick="deleteCurator()">Удалить куратора</button>
+</form>
+
+<script th:inline="javascript">
+    /* Обработчик клика на кнопку для создания куратора */
+    function createCurator() {
+        var curatorData = $('#createCuratorForm').serialize();
+        $.post('/curator/create', curatorData, function(response) {
+            /* Отображение результата в блоке с id="curatorsResult" */
+            $('#curatorsResult').html(response);
+        });
+    }
+
+    /* Обработчик клика на кнопку для получения всех кураторов */
+    function getAllCurators() {
+        $.get('/curators', function(data) {
+            /* Отображение результата в блоке с id="curatorsResult" */
+            $('#curatorsResult').html(data);
+        });
+    }
+
+    /* Обработчик клика на кнопку для удаления куратора */
+    function deleteCurator() {
+        var curatorEmail = $('#deleteCuratorEmail').val();
+        $.ajax({
+            url: '/curator/delete/' + curatorEmail,
+            type: 'DELETE',
+            success: function(response) {
+                /* Отображение результата в блоке с id="curatorsResult" */
+                $('#curatorsResult').html(response);
+            },
+            error: function(error) {
+                /* В случае ошибки выводим сообщение об ошибке */
+                $('#curatorsResult').html('Ошибка: ' + error.responseText);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

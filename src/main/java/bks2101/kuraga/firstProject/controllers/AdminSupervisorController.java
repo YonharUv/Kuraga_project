@@ -9,6 +9,7 @@ import bks2101.kuraga.firstProject.entitys.Role;
 import bks2101.kuraga.firstProject.exceptions.AppError;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
+import bks2101.kuraga.firstProject.repository.SupervisorRepository;
 import bks2101.kuraga.firstProject.repository.UserRepository;
 import bks2101.kuraga.firstProject.service.CuratorService;
 import bks2101.kuraga.firstProject.service.SupervisorService;
@@ -30,9 +31,13 @@ public class AdminSupervisorController {
     private final UserDetailsServiceImpl userService;
     private final SupervisorService supervisorService;
     private final UserRepository userRepository;
+    private final SupervisorRepository supervisorRepository;
 
     @PostMapping("/supervisor/create")
     public ResponseEntity createSupervisorAdmin(@RequestBody RequestSupervisor supervisor) throws UserAlreadyExistsException {
+        if (supervisorRepository.findByEmail(supervisor.getEmail()) != null) {
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Супервизор с такой почтой уже существует"), HttpStatus.BAD_REQUEST);
+        }
         userService.setRole(userRepository.findByEmail(supervisor.getEmail()), Role.SUPERVISOR);
         return supervisorService.createSupervisorAdmin(supervisor);
     }

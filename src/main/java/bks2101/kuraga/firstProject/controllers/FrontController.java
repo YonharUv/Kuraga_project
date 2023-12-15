@@ -1,16 +1,42 @@
 package bks2101.kuraga.firstProject.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class FrontController {
-    @RequestMapping("/home")
-    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
-        return "home";
+    @GetMapping("/auth")
+    public String AuthPage() {
+        return "auth";
+    }
+    @GetMapping("/admin/panel/users")
+    public String AdminUsersPage() {
+        return "adminUsers";
+    }
+    @GetMapping("/admin/panel/curators")
+    public String AdminCuratorsPage() {
+        return "adminCurators";
+    }
+    @GetMapping("/admin/panel/supervisors")
+    public String AdminSupervisorsPage() {
+        return "adminSupervisors";
+    }
+    @GetMapping("/ban")
+    public String BanPage() {
+        return "banned";
+    }
+    @GetMapping("/curator")
+    public String CuratorPanelPage() {
+        return "curatorPanel";
+    }
+    @GetMapping("/forgotPass/{token}/resetPass")
+    public String ResetPasswordPage() { return "resetPass"; }
+    @GetMapping("/forgotPass")
+    public String ForgotPassPage() {
+        return "forgotPass";
+    }
+    @GetMapping("/supervisor")
+    public String SupervisorPanelPage() {
+        return "supervisorPanel";
     }
 }

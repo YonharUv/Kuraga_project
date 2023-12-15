@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Админ Панель</title>
+    <link th:href="@{/css/adminUsers.css}" rel="stylesheet" />
+    <!-- Подключение jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+<nav>
+    <a href="#Users">Users</a>
+    <a href="#Curators">Curators</a>
+    <a href="#Supervisors">Supervisors</a>
+    <a href="#logout">Log out</a>
+</nav>
+
+<div class="form-container">
+    <h2>Создать супервизора</h2>
+    <form id="createSupervisorForm" th:action="@{/admin/supervisor/create}" method="post">
+        <div class="input-container">
+            <label for="createSupervisorEmail">Email супервизора:</label>
+            <input type="text" id="createSupervisorEmail" name="email" required placeholder=" "/><br/>
+        </div>
+        <div class="input-container">
+            <label for="supervisorFirstName">Имя супервизора:</label>
+            <input type="text" id="supervisorFirstName" name="first_name" required placeholder=" "/><br/>
+        </div>
+        <div class="input-container">
+            <label for="supervisorLastName">Фамилия супервизора:</label>
+            <input type="text" id="supervisorLastName" name="last_name" required placeholder=" "/><br/>
+        </div>
+        <div class="input-container">
+            <label for="supervisorPersonalData">Личные данные супервизора:</label>
+            <input type="text" id="supervisorPersonalData" name="personal_data" required placeholder=" "/><br/>
+        </div>
+        <button type="button" onclick="createSupervisor()" class="align-right">Создать супервизора-админа</button>
+    </form>
+
+</div>
+
+<div id="createSupervisorResultContainer"></div>
+
+<div class="form-container">
+    <h2>Получить всех супервизоров</h2>
+    <button type="button" onclick="getAllSupervisors()" class="align-right">Получить всех супервизоров</button>
+</div>
+
+<div id="supervisorsDataContainer"></div>
+
+<<div class="form-container">
+    <h2>Получить супервизора по email</h2>
+    <form id="getSupervisorForm">
+        <div class="input-container">
+            <label for="supervisorEmail2">Email супервизора:</label>
+            <input type="text" id="supervisorEmail2" name="email" required placeholder=" "/><br/>
+        </div>
+        <button type="button" id="getSupervisorByEmailButton" class="align-right">Получить супервизора</button>
+    </form>
+</div>
+
+<div id="supervisorByEmailResultContainer"></div>
+
+<div class="form-container">
+    <h2>Добавить кураторов по email супервизора</h2>
+    <form id="addCuratorsToSupervisorForm">
+        <!--<label for="supervisorEmail">Email супервизора:</label>-->
+        <div class="input-container">
+            <label for="supervisorEmailCurators">Email супервизора:</label>
+            <input type="text" id="supervisorEmailCurators" name="email" required placeholder=" "/><br/>
+        </div>
+        <div class="input-container">
+            <label for="curatorsEmails">Email кураторов (разделите запятыми):</label>
+            <input type="text" id="curatorsEmails" name="curators_emails" required placeholder=" "/><br/>
+        </div>
+        <button type="button" id="addCuratorsToSupervisorButton" class="align-right">Добавить кураторов</button>
+    </form>
+</div>
+
+<div id="addCuratorsToSupervisorResultContainer"></div>
+
+<div class="form-container">
+    <h2>Обновить информацию о супервизоре</h2>
+    <form id="updateSupervisorForm">
+        <label for="updateSupervisorEmail">Email супервизора:</label>
+        <input type="text" id="updateSupervisorEmail" name="email" required/><br/>
+        <!-- Добавьте другие поля по необходимости -->
+
+        <button type="button" onclick="updateSupervisor()" class="align-right">Обновить информацию о супервизоре</button>
+    </form>
+</div>
+
+<div id="updateSupervisorResultContainer"></div>
+
+<div class="form-container">
+    <h2>Удалить супервизора</h2>
+    <form id="deleteSupervisorForm">
+        <div class="input-container">
+            <label for="deleteSupervisorEmail">Email супервизора:</label>
+            <input type="text" id="deleteSupervisorEmail" name="email" required placeholder=" "/><br/>
+        </div>
+        <button type="button" onclick="deleteSupervisor()" class="align-right">Удалить супервизора</button>
+    </form>
+</div>
+
+<div id="deleteSupervisorResultContainer"></div>
+
+<script th:inline="javascript">
+
+    function updateSupervisor() {
+        var form = document.getElementById('updateSupervisorForm');
+        var supervisorData = {
+            "email": form.updateSupervisorEmail.value,
+            "first_name": form.updateSupervisorFirstName.value,
+            "last_name": form.updateSupervisorLastName.value,
+            "personal_data": form.updateSupervisorPersonalData.value
+        };
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', form.action, true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                var responseContainer = document.getElementById('updateSupervisorResultContainer');
+
+                responseContainer.innerHTML = '';
+
+                if (xhr.status === 200) {
+
+                    var supervisorInfo = JSON.parse(xhr.responseText);
+
+                    // Display each attribute in a separate paragraph
+                    for (var key in supervisorInfo) {
+                        if (supervisorInfo.hasOwnProperty(key)) {
+                            var attributeInfo = document.createElement('p');
+                            attributeInfo.textContent = key + ': ' + supervisorInfo[key];
+                            responseContainer.appendChild(attributeInfo);
+                        }
+                    }
+                } else {
+
+                    responseContainer.innerHTML = '<p>Error: ' + xhr.responseText + '</p>';
+                }
+            }
+        };
+
+        xhr.send(JSON.stringify(supervisorData));
+    }
+    function deleteSupervisor() {
+        // Получаем значение email супервизора из формы
+        var supervisorEmail = document.getElementById('deleteSupervisorEmail').value;
+
+        // Выполняем AJAX-запрос
+        var xhr = new XMLHttpRequest();
+        xhr.open('DELETE', '/supervisor/delete/' + supervisorEmail, true);
+
+        xhr.onload = function() {
+            var deleteSupervisorResultContainer = document.getElementById('deleteSupervisorResultContainer');
+
+            // Очищаем контейнер
+            deleteSupervisorResultContainer.innerHTML = '';
+
+            if (xhr.status === 200) {
+                // Создаем элемент для вывода результата
+                var deleteSupervisorResult = document.createElement('p');
+                deleteSupervisorResult.textContent = 'Супервизор удален. Ответ от сервера: ' + xhr.responseText;
+
+                // Вставляем элемент в контейнер
+                deleteSupervisorResultContainer.appendChild(deleteSupervisorResult);
+            } else {
+                // Выводим сообщение об ошибке
+                deleteSupervisorResultContainer.innerHTML = '<p>Error: ' + xhr.responseText + '</p>';
+            }
+        };
+
+        xhr.send();
+    }
+
+    document.getElementById('getSupervisorByEmailButton').addEventListener('click', function() {
+        // Получаем значение email супервизора из формы
+        var supervisorEmail = document.getElementById('supervisorEmail2').value;
+
+        // Выполняем AJAX-запрос
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/admin/supervisor/' + supervisorEmail, true);
+
+        xhr.onload = function() {
+            var supervisorContainer = document.getElementById('supervisorByEmailResultContainer');
+
+            if (xhr.status === 200) {
+                // Парсим JSON-ответ
+                var supervisorData = JSON.parse(xhr.responseText);
+
+                // Очищаем контейнер
+                supervisorContainer.innerHTML = '';
+
+                // Создаем элементы для вывода данных
+                var supervisorDetails = document.createElement('div');
+                supervisorDetails.innerHTML = '<h3>Supervisor Details:</h3>';
+
+                // Добавляем все поля супервизора
+                for (var key in supervisorData) {
+                    if (supervisorData.hasOwnProperty(key)) {
+                        supervisorDetails.innerHTML += '<p>' + key + ': ' + supervisorData[key] + '</p>';
+                    }
+                }
+
+                // Вставляем элементы в контейнер
+                supervisorContainer.appendChild(supervisorDetails);
+            } else {
+                // Выводим сообщение об ошибке
+                supervisorContainer.innerHTML = '<p>Error: ' + xhr.responseText + '</p>';
+            }
+        };
+
+        xhr.send();
+    });
+    function createSupervisor() {
+        var form = document.getElementById('createSupervisorForm');
+        var supervisorData = {
+            "email": form.createCupervisorEmail1.value,
+            "first_name": form.supervisorFirstName.value,
+            "last_name": form.supervisorLastName.value,
+            "personal_data": form.supervisorPersonalData.value
+        };
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', form.action, true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                var responseContainer = document.getElementById('createSupervisorResultContainer');
+                // Clear previous content
+                responseContainer.innerHTML = '';
+
+                if (xhr.status === 200) {
+                    // Parse JSON response
+                    var supervisorInfo = JSON.parse(xhr.responseText);
+
+                    // Display each attribute in a separate paragraph
+                    for (var key in supervisorInfo) {
+                        if (supervisorInfo.hasOwnProperty(key)) {
+                            var attributeInfo = document.createElement('p');
+                            attributeInfo.textContent = key + ': ' + supervisorInfo[key];
+                            responseContainer.appendChild(attributeInfo);
+                        }
+                    }
+                } else {
+                    // Display error message
+                    var errorMessage = document.createElement('p');
+                    errorMessage.textContent = 'Error: Проверьте валидность введённых данных';
+                    errorMessage.classList.add('error');
+                    responseContainer.appendChild(errorMessage);
+                }
+            }
+        };
+
+        xhr.send(JSON.stringify(supervisorData));
+    }
+
+
+/* Обработчик клика на кнопку для получения всех супервизоров */
+    function getAllSupervisors() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/admin/supervisors', true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var supervisorsContainer = document.getElementById('supervisorsDataContainer');
+                var supervisors = JSON.parse(xhr.responseText);
+
+                // Создаем таблицу для отображения данных супервизоров
+                var tableHtml = '<table border="1">';
+                tableHtml += '<tr>';
+                for (var key in supervisors[0]) {
+                    tableHtml += '<th>' + key + '</th>';
+                }
+                tableHtml += '</tr>';
+
+                // Добавляем строки с данными супервизоров
+                for (var i = 0; i < supervisors.length; i++) {
+                    tableHtml += '<tr>';
+                    for (var key in supervisors[i]) {
+                        tableHtml += '<td>' + supervisors[i][key] + '</td>';
+                    }
+                    tableHtml += '</tr>';
+                }
+
+                tableHtml += '</table>';
+
+                // Выводим таблицу на страницу
+                supervisorsContainer.innerHTML = tableHtml;
+            }
+        };
+
+        xhr.send();
+    }
+
+    /* Обработчик клика на кнопку для получения супервизора по email */
+    function getSupervisorByEmail() {
+        var supervisorEmail = $('#supervisorEmail').val();
+        $.get('/admin/supervisor/' + supervisorEmail, function(response) {
+            /* Отображение результата в блоке с id="supervisorByEmailResultContainer" */
+            $('#supervisorByEmailResultContainer').html(response);
+        });
+    }
+
+    /* Обработчик клика на кнопку для добавления кураторов по email супервизора */
+    function addCuratorsToSupervisor() {
+        var supervisorEmail = $('#supervisorEmailCurators').val();
+        var curatorsEmails = $('#curatorsEmails').val();
+        $.post('/admin/supervisor/' + supervisorEmail + '/curators', { curators_emails: curatorsEmails }, function(response) {
+            /* Отображение результата в блоке с id="addCuratorsToSupervisorResultContainer" */
+            $('#addCuratorsToSupervisorResultContainer').html(response);
+        });
+    }
+
+    /* Обработчик клика на кнопку для обновления информации о супервизоре */
+    function updateSupervisor() {
+        var supervisorData = $('#updateSupervisorForm').serialize();
+        $.post('/admin/supervisor/update', supervisorData, function(response) {
+            /* Отображение результата в блоке с id="updateSupervisorResultContainer" */
+            $('#updateSupervisorResultContainer').html(response);
+        });
+    }
+
+    /* Обработчик клика на кнопку для удаления супервизора */
+    function deleteSupervisor() {
+        var supervisorEmail = $('#deleteSupervisorEmail').val();
+        $.ajax({
+            url: '/admin/supervisor/delete/' + supervisorEmail,
+            type: 'DELETE',
+            success: function(response) {
+                /* Отображение результата в блоке с id="deleteSupervisorResultContainer" */
+                $('#deleteSupervisorResultContainer').html(response);
+            },
+            error: function(error) {
+                /* В случае ошибки выводим сообщение об ошибке */
+                $('#deleteSupervisorResultContainer').html('Ошибка: ' + error.responseText);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

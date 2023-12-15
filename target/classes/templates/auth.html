@@ -54,21 +54,21 @@
                 // Handle successful response
                 console.log(data);
 
-                // Set the token in the Authorization header for subsequent requests
+                // Set the token in the localStorage
                 var token = data.token;
-                if (token) {
-                    // Set the Authorization header globally for all future fetch requests
-                    window.fetch = function (url, init) {
-                        init.headers = init.headers || new Headers();
-                        init.headers.set('Authorization', 'Bearer ' + token);
-                        return fetch(url, init);
-                    };
+                // Создайте копию оригинальной функции fetch
+                var originalFetch = window.fetch;
 
-                    // Redirect to /home
-                    window.location.href = '/home';
-                } else {
-                    console.error('Token not found in the response.');
-                }
+                window.fetch = function (url, options) {
+                    // Создайте объект заголовков
+                    options.headers = options.headers || new Headers();
+
+                    // Установите заголовок Authorization
+                    options.headers.set('Authorization', 'Bearer ' + token);
+
+                    // Вызовите оригинальную функцию fetch с измененными параметрами
+                    return originalFetch(url, options);
+                };
             })
             .catch(error => {
                 // Handle error by displaying message on the page
@@ -77,7 +77,6 @@
             });
     }
 </script>
-
 
 </body>
 </html>

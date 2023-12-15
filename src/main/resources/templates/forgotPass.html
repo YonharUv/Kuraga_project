@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Сброс пароля</title>
+    <!-- Добавьте вашу стилевую таблицу или подключение к стилям -->
+</head>
+<body>
+
+<div style="text-align: center; margin-top: 50px;">
+    <h2>Сброс пароля</h2>
+    <!-- Сообщение об успешной отправке запроса на сброс пароля -->
+    <div th:if="${successMessage}">
+        <p th:text="${successMessage}"></p>
+    </div>
+
+    <!-- Форма для отправки запроса на сброс пароля -->
+    <form th:action="@{/forgotPass/{email}}" method="post">
+        <label for="email">Введите ваш email:</label>
+        <input type="email" id="email" name="email" required/><br/>
+        <button type="submit">Сбросить пароль</button>
+    </form>
+
+    <!-- Отображение ошибки, если пользователь с таким email не найден -->
+    <div th:if="${errorMessage}">
+        <p th:text="${errorMessage}"></p>
+    </div>
+</div>
+
+</body>
+</html>
