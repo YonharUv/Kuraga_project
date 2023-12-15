@@ -39,11 +39,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return UserDetailsImpl.fromUser(user);
     }
     public ApplicationUser createNewUser(RegistrationUserDto registrationUserDto) {
+//        ApplicationUser user = new ApplicationUser();
+//        user.setUsername(registrationUserDto.getUsername());
+//        user.setEmail(registrationUserDto.getEmail());
+//        user.setPassword(passwordEncoder.encode(registrationUserDto.getPassword()));
+//        user.setRole(Role.USER);
         ApplicationUser user = new ApplicationUser();
         user.setUsername(registrationUserDto.getUsername());
         user.setEmail(registrationUserDto.getEmail());
         user.setPassword(passwordEncoder.encode(registrationUserDto.getPassword()));
         user.setRole(Role.USER);
+        user.setActivationCode(UUID.randomUUID().toString());
         return userRepository.save(user);
     }
 
