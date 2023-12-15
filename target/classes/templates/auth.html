@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+<!--     <link rel="stylesheet" href="../static/css/auth.css">-->
+    <link rel="stylesheet" th:href="@{/css/auth.css}"  />
 </head>
 <body>
 
 <h2>Login</h2>
 
 <form id="loginForm">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required="required"/>
+    <label for="username"></label>
+    <input type="text" id="username" name="username" required="required" placeholder="Username"/>
     <br/>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required="required"/>
+    <label for="password"></label>
+    <input type="password" id="password" name="password" required="required" placeholder="Password"/>
     <br/>
+
+    <div id="errorMessage"></div>
 
     <button type="button" onclick="submitForm()">Login</button>
 </form>
 
-<div id="errorMessage" style="color: red;"></div>
+
 
 
 <script>
@@ -54,21 +58,21 @@
                 // Handle successful response
                 console.log(data);
 
-                // Set the token in the localStorage
+                // Set the token in the Authorization header for subsequent requests
                 var token = data.token;
-                // Создайте копию оригинальной функции fetch
-                var originalFetch = window.fetch;
+                if (token) {
+                    // Set the Authorization header globally for all future fetch requests
+                    window.fetch = function (url, init) {
+                        init.headers = init.headers || new Headers();
+                        init.headers.set('Authorization', 'Bearer ' + token);
+                        return fetch(url, init);
+                    };
 
-                window.fetch = function (url, options) {
-                    // Создайте объект заголовков
-                    options.headers = options.headers || new Headers();
-
-                    // Установите заголовок Authorization
-                    options.headers.set('Authorization', 'Bearer ' + token);
-
-                    // Вызовите оригинальную функцию fetch с измененными параметрами
-                    return originalFetch(url, options);
-                };
+                    // Redirect to /home
+                    window.location.href = '/home';
+                } else {
+                    console.error('Token not found in the response.');
+                }
             })
             .catch(error => {
                 // Handle error by displaying message on the page
@@ -77,6 +81,7 @@
             });
     }
 </script>
+
 
 </body>
 </html>
