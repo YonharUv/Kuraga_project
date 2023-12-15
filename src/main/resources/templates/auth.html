@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+
+<h2>Login</h2>
+
+<form id="loginForm">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required="required"/>
+    <br/>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required="required"/>
+    <br/>
+
+    <button type="button" onclick="submitForm()">Login</button>
+</form>
+
+<div id="errorMessage" style="color: red;"></div>
+
+
+<script>
+    function submitForm() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        var data = {
+            username: username,
+            password: password
+        };
+
+        fetch('/auth', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.message);
+                    });
+                }
+
+                // Extract token from the response
+                return response.json();
+            })
+            .then(data => {
+                // Handle successful response
+                console.log(data);
+
+                // Set the token in the localStorage
+                var token = data.token;
+                // Создайте копию оригинальной функции fetch
+                var originalFetch = window.fetch;
+
+                window.fetch = function (url, options) {
+                    // Создайте объект заголовков
+                    options.headers = options.headers || new Headers();
+
+                    // Установите заголовок Authorization
+                    options.headers.set('Authorization', 'Bearer ' + token);
+
+                    // Вызовите оригинальную функцию fetch с измененными параметрами
+                    return originalFetch(url, options);
+                };
+            })
+            .catch(error => {
+                // Handle error by displaying message on the page
+                document.getElementById('errorMessage').innerText = error.message;
+                console.error('Error:', error.message);
+            });
+    }
+</script>
+
+</body>
+</html>

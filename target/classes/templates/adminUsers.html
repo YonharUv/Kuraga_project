@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Админ Панель</title>
+    <link th:href="@{/css/adminUsers.css}" rel="stylesheet" />
+</head>
+<body>
+<nav>
+    <a href="#Users">Users</a>
+    <a href="#Curators">Curators</a>
+    <a href="#Supervisors">Supervisors</a>
+    <a href="#logout">Log out</a>
+</nav>
+
+<div class="form-container">
+    <h2>Регистрация нового пользователя</h2>
+    <form id="registrationForm" th:action="@{/admin/registration}" method="post">
+        <div class="input-container">
+            <input type="text" id="username" name="username" required placeholder=" " />
+            <label for="username">Имя пользователя:</label>
+        </div>
+        <div class="input-container">
+            <input type="email" id="email" name="email" required placeholder=" " />
+            <label for="email">Email:</label>
+        </div>
+        <div class="input-container">
+            <input type="password" id="password" name="password" required placeholder=" " />
+            <label for="password">Пароль:</label>
+        </div>
+        <div class="input-container">
+            <input type="password" id="confirmPassword" name="confirmPassword" required placeholder=" " />
+            <label for="confirmPassword">Подтверждение пароля:</label>
+        </div>
+        <button type="button" onclick="submitForm()" class="align-right">Зарегистрировать</button>
+    </form>
+
+    <!-- Отображение данных ответа -->
+    <div id="responseContainer"></div>
+</div>
+
+<div class="form-container">
+    <h2>Получить всех пользователей</h2>
+    <button type="button" onclick="getAllUsers()" class="align-right">Получить всех пользователей</button>
+</div>
+
+<div id="usersDataContainer"></div>
+
+<div class="form-container">
+    <h2>Получить пользователя по ID</h2>
+    <form id="getUserForm">
+        <div class="input-container">
+            <label for="userId">ID пользователя:</label>
+            <input type="text" id="userId" name="id" required placeholder=" "/><br/>
+        </div>
+        <button type="button" id="getUserByIdButton" class="align-right">Получить пользователя</button>
+    </form>
+</div>
+
+<div id="userByIdContainer"></div>
+
+<div class="form-container">
+    <h2>Получить пользователя по имени пользователя</h2>
+    <form id="findUserForm">
+        <div class="input-container">
+            <label for="searchUsername">Имя пользователя:</label>
+            <input type="text" id="searchUsername" name="username" required placeholder=" "/><br/>
+        </div>
+        <button type="button" id="findUserByUsernameButton" class="align-right">Получить пользователя</button>
+    </form>
+</div>
+
+<div id="userByUsernameResultContainer"></div>
+
+<div class="form-container">
+    <h2>Забанить пользователя</h2>
+    <form id="banUserForm">
+        <div class="input-container">
+            <label for="banUserId">ID пользователя:</label>
+            <input type="text" id="banUserId" name="id" required placeholder=" "/><br/>
+        </div>
+        <button type="button" id="banUserButton" class="align-right">Забанить пользователя</button>
+    </form>
+</div>
+
+<div id="banResultContainer"></div>
+
+<div class="form-container">
+    <form id="setSupervisorForm">
+        <div class="input-container">
+            <h2>Установить привилегии "Supervisor" пользователю</h2>
+            <div class="input-container2">
+                <label for="supervisorUserId">ID пользователя:</label>
+                <input type="text" id="supervisorUserId" name="id" required placeholder=" "/><br/>
+            </div>
+            <button type="button" id="setSupervisorButton" class="align-right">Установить привилегии Supervisor</button>
+        </div>
+    </form>
+</div>
+
+<div id="setSupervisorResultContainer"></div>
+
+<div class="form-container">
+    <form id="deleteUserForm">
+        <div class="input-container">
+            <h2>Удалить пользователя</h2>
+            <div class="input-container2">
+                <label for="deleteUserId">ID пользователя:</label>
+                <input type="text" id="deleteUserId" name="id" required placeholder=" "/><br/>
+            </div>
+            <button type="button" id="deleteUserButton" class="align-right">Удалить пользователя</button>
+        </div>
+    </form>
+</div>
+
+<div id="deleteUserResultContainer"></div>
+
+<script>
+    document.getElementById('deleteUserButton').addEventListener('click', function() {
+        // Получаем значение ID пользователя из формы
+        var userId = document.getElementById('deleteUserId').value;
+
+        // Выполняем AJAX-запрос
+        var xhr = new XMLHttpRequest();
+        xhr.open('DELETE', '/admin/user/delete/' + userId, true);
+
+        xhr.onload = function() {
+            var deleteUserResultContainer = document.getElementById('deleteUserResultContainer');
+
+            // Очищаем контейнер
+            deleteUserResultContainer.innerHTML = '';
+
+            if (xhr.status === 200) {
+                // Создаем элемент для вывода результата
+                var deleteUserResult = document.createElement('p');
+                deleteUserResult.textContent = 'Пользователь удален. Ответ от сервера: ' + xhr.responseText;
+
+                // Вставляем элемент в контейнер
+                deleteUserResultContainer.appendChild(deleteUserResult);
+            } else {
+                // Выводим сообщение об ошибке
+                deleteUserResultContainer.innerHTML = '<p>Error: ' + xhr.responseText + '</p>';
+            }
+        };
+
+        xhr.send();
+    });
+</script>
+
+<script>
+    document.getElementById('setSupervisorButton').addEventListener('click', function() {
+        // Получаем значение ID пользователя из формы
+        var userId = document.getElementById('supervisorUserId').value;
+
+        // Выполняем AJAX-запрос
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/admin/users/' + userId + '/setSupervisor', true);
+
+        xhr.onload = function() {
+            var setSupervisorResultContainer = document.getElementById('setSupervisorResultContainer');
+
+            // Очищаем контейнер
+            setSupervisorResultContainer.innerHTML = '';
+
+            if (xhr.status === 200) {
+                // Создаем элемент для вывода результата
+                var setSupervisorResult = document.createElement('p');
+                setSupervisorResult.textContent = xhr.responseText;
+
+                // Вставляем элемент в контейнер
+                setSupervisorResultContainer.appendChild(setSupervisorResult);
+            } else {
+                // Выводим сообщение об ошибке
+                setSupervisorResultContainer.innerHTML = '<p>Error: ' + xhr.responseText + '</p>';
+            }
+        };
+
+        xhr.send();
+    });
+</script>
+
+<script>
+    document.getElementById('banUserButton').addEventListener('click', function() {
+        // Получаем значение ID пользователя из формы
+        var userId = document.getElementById('banUserId').value;
+
+        // Выполняем AJAX-запрос
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/admin/users/' + userId + '/ban', true);
+
+        xhr.onload = function() {
+            var banResultContainer = document.getElementById('banResultContainer');
+
+            // Очищаем контейнер
+            banResultContainer.innerHTML = '';
+
+            if (xhr.status === 200) {
+                // Создаем элемент для вывода результата
+                var banResult = document.createElement('p');
+                banResult.textContent = xhr.responseText;
+
+                // Вставляем элемент в контейнер
+                banResultContainer.appendChild(banResult);
+            } else {
+                // Выводим сообщение об ошибке
+                banResultContainer.innerHTML = '<p>Error: ' + xhr.responseText + '</p>';
+            }
+        };
+
+        xhr.send();
+    });
+</script>
+
+<script>
+    document.getElementById('findUserByUsernameButton').addEventListener('click', function() {
+        // Получаем значение имени пользователя из формы
+        var username = document.getElementById('searchUsername').value;
+
+        // Выполняем AJAX-запрос
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/admin/users/find/' + username, true);
+
+        xhr.onload = function() {
+            var userContainer = document.getElementById('userByUsernameResultContainer');
+
+            if (xhr.status === 200) {
+                // Парсим JSON-ответ
+                var userData = JSON.parse(xhr.responseText);
+
+                // Очищаем контейнер
+                userContainer.innerHTML = '';
+
+                // Создаем элементы для вывода данных
+                var userDetails = document.createElement('div');
+                userDetails.innerHTML = '<h3>User Details:</h3>';
+
+                // Добавляем все поля пользователя
+                for (var key in userData) {
+                    if (userData.hasOwnProperty(key)) {
+                        userDetails.innerHTML += '<p>' + key + ': ' + userData[key] + '</p>';
+                    }
+                }
+
+                // Вставляем элементы в контейнер
+                userContainer.appendChild(userDetails);
+            } else {
+                // Выводим сообщение об ошибке
+                userContainer.innerHTML = '<p>Error: ' + xhr.responseText + '</p>';
+            }
+        };
+
+        xhr.send();
+    });
+</script>
+
+<script th:inline="javascript">
+    function submitForm() {
+        var form = document.getElementById('registrationForm');
+        var formData = {
+            "username": form.username.value,
+            "email": form.email.value,
+            "password": form.password.value,
+            "confirmPassword": form.confirmPassword.value
+        };
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', form.action, true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                var responseContainer = document.getElementById('responseContainer');
+                if (xhr.status === 200) {
+                    responseContainer.innerHTML = '<p class="success">' + xhr.responseText + '</p>';
+                } else {
+                    response = JSON.parse(xhr.responseText);
+                    responseContainer.innerHTML = '<p class="error">' + response.message + '</p>';
+                }
+            }
+        };
+
+        xhr.send(JSON.stringify(formData));
+    }
+</script>
+
+<script th:inline="javascript">
+    function getAllUsers() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/admin/users', true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var usersContainer = document.getElementById('usersDataContainer');
+                var users = JSON.parse(xhr.responseText);
+
+                // Создаем таблицу для отображения данных пользователей
+                var tableHtml = '<table border="1">';
+                tableHtml += '<tr>';
+                for (var key in users[0]) {
+                    tableHtml += '<th>' + key + '</th>';
+                }
+                tableHtml += '</tr>';
+
+                // Добавляем строки с данными пользователей
+                for (var i = 0; i < users.length; i++) {
+                    tableHtml += '<tr>';
+                    for (var key in users[i]) {
+                        tableHtml += '<td>' + users[i][key] + '</td>';
+                    }
+                    tableHtml += '</tr>';
+                }
+
+                tableHtml += '</table>';
+
+                // Выводим таблицу на страницу
+                usersContainer.innerHTML = tableHtml;
+            }
+        };
+
+        xhr.send();
+    }
+</script>
+
+<script>
+    document.getElementById('getUserByIdButton').addEventListener('click', function() {
+        // Получаем значение ID пользователя из формы
+        var userId = document.getElementById('userId').value;
+
+        // Выполняем AJAX-запрос
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/admin/users/' + userId, true);
+
+        xhr.onload = function() {
+            var userContainer = document.getElementById('userByIdContainer');
+
+            if (xhr.status === 200) {
+                // Парсим JSON-ответ
+                var userData = JSON.parse(xhr.responseText);
+
+                // Очищаем контейнер
+                userContainer.innerHTML = '';
+
+                // Создаем элементы для вывода данных
+                var userDetails = document.createElement('div');
+                userDetails.innerHTML = '<h3>User Details:</h3>';
+
+                // Добавляем все поля пользователя
+                for (var key in userData) {
+                    if (userData.hasOwnProperty(key)) {
+                        userDetails.innerHTML += '<p>' + key + ': ' + userData[key] + '</p>';
+                    }
+                }
+
+                // Вставляем элементы в контейнер
+                userContainer.appendChild(userDetails);
+            } else {
+                // Выводим сообщение об ошибке
+                userContainer.innerHTML = '<p>Error: ' + xhr.responseText + '</p>';
+            }
+        };
+
+        xhr.send();
+    });
+</script>
+
+
+
+</body>
+</html>
