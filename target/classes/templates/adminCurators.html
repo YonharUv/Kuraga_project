@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Админ Панель</title>
+    <!-- Подключение jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="Panel.css">
+</head>
+<body>
+
+<nav id="nav-uniq">
+    <h2>Панель администрирования кураторов</h2>
+</nav>
+
+<div class="form-container">
+    <h2>Создать куратора</h2>
+    <form th:action="@{/curator/create}" method="post" th:object="${curatorDto}" >
+        <div class="input-container">
+            <label for="curatorEmail"></label>
+            <input type="email" id="curatorEmail" th:field="*{email}" required placeholder="Email куратора"/>
+            <button type="submit" class="align-right">Создать куратора</button>
+        </div>
+    </form>
+</div>
+
+<div class="form-container">
+    <h2>Получить всех кураторов</h2>
+    <button onclick="getAllCurators()">Получить всех кураторов</button>
+</div>
+
+<div class="form-container">
+    <h2>Удалить куратора</h2>
+    <form th:action="@{/curator/delete/{email}}" method="delete" >
+        <div class="input-container">
+            <label for="deleteCuratorEmail"></label>
+            <input type="text" id="deleteCuratorEmail" name="email" required placeholder="Email куратора"/>
+            <button type="submit" class="align-right">Удалить куратора</button>
+        </div>
+    </form>
+</div>
+
+<script th:inline="javascript">
+    /* Обработчик клика на кнопку для получения всех кураторов */
+    function getAllCurators() {
+        $.get('/curators', function(data) {
+            /* Отображение результата в блоке с id="curatorsResult" */
+            $('#curatorsResult').html(data);
+        });
+    }
+</script>
+
+</body>
+</html>

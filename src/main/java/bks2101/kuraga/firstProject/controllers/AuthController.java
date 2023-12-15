@@ -46,7 +46,6 @@ public class AuthController {
         String token = jwtTokenUtils.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
     }
-
     @GetMapping("/activate/{code}")
     public ResponseEntity<?> activate(@PathVariable String code) {
         boolean isActivated = userService.activateUser(code);

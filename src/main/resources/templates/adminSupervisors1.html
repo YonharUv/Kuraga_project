@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Админ Панель</title>
+    <link rel="stylesheet" href="Panel.css">
+</head>
+<body>
+
+<nav id="nav-uniq">
+    <h2>Панель администрирования супервизоров</h2>
+</nav>
+
+<div class="form-container">
+    <form th:action="@{/supervisor/create}" method="post" th:object="${requestSupervisor}" >
+        <div class="input-container">
+            <h2>Создать супервизора-админа</h2>
+            <div class="input-container2">
+                <label for="supervisorEmail"></label>
+                <input type="email" id="supervisorEmail" th:field="*{email}" required placeholder="Email супервизора"/>
+            </div>
+        <button type="submit" class="align-right">Создать супервизора-админа</button>
+        </div>
+    </form>
+</div>
+
+<div class="form-container">
+    <h2>Получить всех супервизоров</h2>
+    <button onclick="getAllSupervisors()" >Получить всех супервизоров</button>
+</div>
+
+
+<div class="form-container">
+    <h2>Получить супервизора по email</h2>
+    <form th:action="@{/supervisor/{email}}" method="get" >
+        <div class="input-container">
+            <label for="supervisorEmail"></label>
+            <input type="text" id="supervisorEmail" name="email" required placeholder="Email супервизора"/>
+            <button type="submit" class="align-right">Получить супервизора</button>
+        </div>
+    </form>
+</div>
+
+<div class="form-container form-container-uniq">
+
+    <form th:action="@{/supervisor/{email}/curators}" method="post" >
+        <div class="input-container">
+            <h2>Добавить кураторов по email супервизора</h2>
+            <div class="input-container2">
+                <label for="supervisorEmail"></label>
+                <input type="text" id="supervisorEmail" name="email" required placeholder="Email супервизора"/><br/>
+                <label for="curatorsEmails"></label>
+                <input type="text" id="curatorsEmails" name="curators_emails" size="30" required placeholder="Email кураторов (разделите запятыми)"/>
+            </div>
+            <button type="submit" class="align-right">Добавить кураторов</button>
+        </div>
+    </form>
+</div>
+
+<div class="form-container">
+    <h2>Обновить информацию о супервизоре</h2>
+    <form th:action="@{/supervisor/update/{email}}" method="post" >
+        <div class="input-container">
+            <label for="supervisorEmail"></label>
+            <input type="text" id="supervisorEmail" name="email" required placeholder="Email супервизора"/>
+            <!-- Добавьте другие поля по необходимости -->
+            <button type="submit" class="align-right">Обновить информацию о супервизоре</button>
+        </div>
+    </form>
+</div>
+
+<div class="form-container">
+    <h2>Удалить супервизора</h2>
+    <form th:action="@{/supervisor/delete/{email}}" method="delete" >
+        <div class="input-container">
+            <label for="deleteSupervisorEmail"></label>
+            <input type="text" id="deleteSupervisorEmail" name="email" required placeholder="Email супервизора"/>
+            <button type="submit" class="align-right">Удалить супервизора</button>
+        </div>
+    </form>
+</div>
+
+<script th:inline="javascript">
+    /* Обработчик клика на кнопку */
+    function getAllSupervisors() {
+        $.get('/supervisors', function(data) {
+            /* Отображение результата в блоке с id="supervisorsResult" */
+            $('#supervisorsResult').html(data);
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8"/>
     <title>Админ Панель</title>
-    <link rel="stylesheet" th:href="@{/css/adminUsers.css}" />
+    <link th:href="@{/css/Panel.css}" rel="stylesheet" />
+    <script src="/js/adminUsers.js"></script>
 </head>
 <body>
 <nav>
@@ -14,101 +15,110 @@
 </nav>
 
 <div class="form-container">
-    <form th:action="@{/registration}" method="post" th:object="${registrationUserDto}">
+    <h2>Регистрация нового пользователя</h2>
+    <form id="registrationForm" th:action="@{/admin/registration}" method="post">
         <div class="input-container">
-            <h2>Регистрация нового пользователя</h2>
-            <div class="input-container2">
-    <!--            <input type="text" id="username" th:field="*{username}" required placeholder=" "/>-->
-    <!--            <label for="username">Имя пользователя:</label>-->
-            </div>
-            <div class="input-container2">
-    <!--            <input type="email" id="email" th:field="*{email}" required placeholder=" "/>-->
-    <!--            <label for="email">Email:</label>-->
-            </div>
-            <div class="input-container2">
-    <!--            <input type="password" id="password" th:field="*{password}" required placeholder=" "/>-->
-    <!--            <label for="password">Пароль:</label>-->
-            </div>
-            <div class="input-container2">
-    <!--            <input type="password" id="confirmPassword" th:field="*{confirmPassword}" required placeholder=" "/>-->
-    <!--            <label for="confirmPassword">Подтверждение пароля:</label>-->
-            </div>
-            <button type="submit" class="align-right">Зарегистрировать</button>
+            <input type="text" id="username" name="username" required placeholder="Имя пользователя" />
+            <label for="username"></label>
         </div>
+        <div class="input-container">
+            <input type="email" id="email" name="email" required placeholder="Email" />
+            <label for="email"></label>
+        </div>
+        <div class="input-container">
+            <input type="password" id="password" name="password" required placeholder="Пароль" />
+            <label for="password"></label>
+        </div>
+        <div class="input-container">
+            <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Подтверждение пароля" />
+            <label for="confirmPassword"></label>
+        </div>
+        <button type="button" onclick="submitForm()" class="align-right">Зарегистрировать</button>
     </form>
 </div>
 
 <div class="form-container">
     <h2>Получить всех пользователей</h2>
-    <a th:href="@{/users}" class="align-right">Получить всех пользователей</a>
+    <button id="getAllUsersButton" type="button" onclick="getAllUsers()" class="align-right">Получить всех пользователей</button>
 </div>
+<div id="usersDataContainer" class="table-container"></div>
 
 <div class="form-container">
-    <form th:action="@{/users/{id}}" method="get">
+    <h2>Получить пользователя по ID</h2>
+    <form id="getUserForm">
         <div class="input-container">
-            <h2>Получить пользователя по ID</h2>
-            <div class="input-container2">
-            <label for="userId">ID пользователя:</label>
-            <input type="text" id="userId" name="id" required placeholder=" "/><br/>
-            </div>
-            <button type="submit" class="align-right">Получить пользователя</button>
+            <label for="userId"></label>
+            <input type="text" id="userId" name="id" required placeholder="ID пользователя"/><br/>
         </div>
+        <button type="button" id="getUserByIdButton" class="align-right">Получить пользователя</button>
     </form>
 </div>
 
+<div id="userByIdContainer"></div>
+
 <div class="form-container">
-    <form th:action="@{/users/find/{username}}" method="get">
+    <h2>Получить пользователя по имени пользователя</h2>
+    <form id="findUserForm">
         <div class="input-container">
-            <h2>Получить пользователя по имени пользователя</h2>
-            <div class="input-container2">
-            <label for="searchUsername">Имя пользователя:</label>
-            <input type="text" id="searchUsername" name="username" required placeholder=" "/><br/>
-            </div>
-            <button type="submit" class="align-right">Получить пользователя</button>
+            <label for="searchUsername"></label>
+            <input type="text" id="searchUsername" name="username" required placeholder="Имя пользователя"/><br/>
         </div>
+        <button type="button" id="findUserByUsernameButton" class="align-right">Получить пользователя</button>
     </form>
 </div>
 
+<div id="userByUsernameResultContainer"></div>
+
 <div class="form-container">
-    <form th:action="@{/users/{id}/ban}" method="post">
+    <h2>Забанить пользователя</h2>
+    <form id="banUserForm">
         <div class="input-container">
-            <h2>Забанить пользователя</h2>
-            <div class="input-container2">
-            <label for="banUserId">ID пользователя:</label>
-            <input type="text" id="banUserId" name="id" required placeholder=" "/><br/>
-            </div>
-        <button type="submit" class="align-right">Забанить пользователя</button>
+            <label for="banUserId"></label>
+            <input type="text" id="banUserId" name="id" required placeholder="ID пользователя"/><br/>
         </div>
+        <button type="button" id="banUserButton" class="align-right">Забанить пользователя</button>
+    </form>
+</div>
+<div id="banResultContainer"></div>
+
+<div class="form-container">
+    <h2>Разбанить пользователя</h2>
+    <form id="unbanUserForm">
+        <div class="input-container">
+            <label for="unbanUserId"></label>
+            <input type="text" id="unbanUserId" name="id" required placeholder="ID пользователя"/><br/>
+        </div>
+        <button type="button" id="unbanUserButton" class="align-right">Разбанить пользователя</button>
     </form>
 </div>
 
+<div id="unbanResultContainer"></div>
+
 <div class="form-container">
-
-    <form th:action="@{/users/{id}/setSupervisor}" method="post">
+    <h2>Установить привилегии "Supervisor" пользователю</h2>
+    <form id="setSupervisorForm">
         <div class="input-container">
-            <h2>Установить привилегии "Supervisor" пользователю</h2>
-            <div class="input-container2">
-            <label for="supervisorUserId">ID пользователя:</label>
-            <input type="text" id="supervisorUserId" name="id" required placeholder=" "/><br/>
-            </div>
-            <button type="submit" class="align-right">Установить привилегии Supervisor</button>
+            <label for="supervisorUserId"></label>
+            <input type="text" id="supervisorUserId" name="id" required placeholder="ID пользователя"/><br/>
         </div>
+            <button type="button" id="setSupervisorButton" class="align-right">Установить привилегии</button>
+    </form>
+</div>
+<div id="setSupervisorResultContainer"></div>
 
+<div class="form-container">
+    <h2>Удалить пользователя</h2>
+    <form id="deleteUserForm">
+        <div class="input-container">
+                <label for="deleteUserId"></label>
+                <input type="text" id="deleteUserId" name="id" required placeholder="ID пользователя"/><br/>
+        </div>
+        <button type="button" id="deleteUserButton" class="align-right">Удалить пользователя</button>
     </form>
 </div>
 
-<div class="form-container">
-    <form th:action="@{/user/delete/{id}}" method="delete">
-        <div class="input-container">
-            <h2>Удалить пользователя</h2>
-            <div class="input-container2">
-            <label for="deleteUserId">ID пользователя:</label>
-            <input type="text" id="deleteUserId" name="id" required placeholder=" "/><br/>
-            </div>
-            <button type="submit" class="align-right">Удалить пользователя</button>
-        </div>
-    </form>
-</div>
+<div id="deleteUserResultContainer"></div>
+
 
 </body>
 </html>

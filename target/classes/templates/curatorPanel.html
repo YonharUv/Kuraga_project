@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Домашняя страница куратора</title>
+    <!-- Добавьте вашу стилевую таблицу или подключение к стилям -->
+    <link rel="stylesheet" href="Panel.css">
+</head>
+<body>
+
+
+<nav class="nav-container">
+    <h2>Информация о кураторе</h2>
+    <div class="info">
+        <p>Имя: <span th:text="${curatorInfo.name}"></span></p>
+        <p>Email: <span th:text="${curatorInfo.email}"></span></p>
+    </div>
+</nav>
+
+
+
+<!-- Форма для вызова маппинга /groups -->
+<div class="form-container">
+    <form th:action="@{/groups}" method="get">
+        <button type="submit" class="align-right">Получить группы куратора</button>
+    </form>
+</div>
+
+<!-- Форма для вызова маппинга /meetings -->
+<div class="form-container">
+    <form th:action="@{/meetings}" method="get">
+        <button type="submit" class="align-right">Получить встречи куратора</button>
+    </form>
+</div>
+
+<!-- Форма для вызова маппинга /{groupName} -->
+<div class="form-container">
+    <form th:action="@{/{groupName}}" method="get">
+        <div class="input-container">
+            <h2>Получить информацию о группе</h2>
+            <label for="groupName"></label>
+            <input type="text" id="groupName" name="groupName" required placeholder="Название группы"/>
+            <button type="submit" class="align-right">Получить информацию о группе</button>
+        </div>
+    </form>
+</div>
+
+<!-- Форма для вызова маппинга /{groupName}/meetings -->
+<div class="form-container">
+    <form th:action="@{/{groupName}/meetings}" method="post">
+        <div class="input-container">
+            <h2>Создать встречу для группы</h2>
+            <label for="createMeetingGroupName"></label>
+            <input type="text" id="createMeetingGroupName" name="groupName" required placeholder="Название группы"/>
+            <!-- Добавьте другие поля для встречи по необходимости -->
+            <button type="submit" class="align-right">Создать встречу для группы</button>
+        </div>
+    </form>
+</div>
+
+<!-- Форма для вызова маппинга /groups/{name}/students -->
+<div class="form-container">
+    <form th:action="@{/groups/{name}/students}" method="get">
+        <div class="input-container">
+            <h2>Получить студентов группы</h2>
+            <label for="groupStudentsName"></label>
+            <input type="text" id="groupStudentsName" name="name" required placeholder="Название группы"/>
+            <button type="submit" class="align-right">Получить студентов группы</button>
+        </div>
+    </form>
+</div>
+
+<!-- Форма для вызова маппинга /groups/{name} -->
+<div class="form-container">
+    <form th:action="@{/groups/{name}}" method="get">
+        <div class="input-container">
+            <h2>Получить информацию о группе</h2>
+            <label for="groupInfoName"></label>
+            <input type="text" id="groupInfoName" name="name" required placeholder="Название группы"/>
+            <button type="submit" class="align-right">Получить информацию о группе</button>
+        </div>
+    </form>
+</div>
+
+
+<!-- Добавьте другие формы по необходимости -->
+
+</body>
+</html>
