@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 @Data
 @NoArgsConstructor
@@ -15,5 +16,5 @@ public class RequestSupervisor {
     private String first_name;
     private String last_name;
     private String personal_data;
-    private Set<String> curators_email;
+    private List<String> curators_email;
 }

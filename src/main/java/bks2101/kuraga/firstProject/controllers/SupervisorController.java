@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 import static java.lang.String.format;
@@ -33,7 +34,7 @@ public class SupervisorController {
     }
 
     @GetMapping("/curators/{curatorEmail}/groups")
-    ResponseEntity<Set<GroupDto>> getCuratorGroupsByEmail(@PathVariable String curatorEmail) throws UserNotFoundByUsernameException {
+    ResponseEntity<List<GroupDto>> getCuratorGroupsByEmail(@PathVariable String curatorEmail) throws UserNotFoundByUsernameException {
         return curatorService.getCuratorGroups(curatorEmail);
     }
     @GetMapping("/curators/{curatorEmail}")

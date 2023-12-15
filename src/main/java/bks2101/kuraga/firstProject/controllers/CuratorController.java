@@ -1,9 +1,6 @@
 package bks2101.kuraga.firstProject.controllers;
 
-import bks2101.kuraga.firstProject.dto.CuratorDto;
-import bks2101.kuraga.firstProject.dto.GroupDto;
-import bks2101.kuraga.firstProject.dto.MeetingDto;
-import bks2101.kuraga.firstProject.dto.StudentDto;
+import bks2101.kuraga.firstProject.dto.*;
 import bks2101.kuraga.firstProject.exceptions.GroupNotFoundByCurator;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
@@ -32,7 +29,7 @@ public class CuratorController {
         return curatorService.getCuratorByEmail(curatorEmail);
     }
     @GetMapping("/groups")
-    ResponseEntity<Set<GroupDto>> getCuratorGroups(@RequestHeader("Authorization") String authHeader) throws UserNotFoundByUsernameException {
+    ResponseEntity<List<GroupDto>> getCuratorGroups(@RequestHeader("Authorization") String authHeader) throws UserNotFoundByUsernameException {
         String jwtToken = authHeader.substring(7);
         String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
         return curatorService.getCuratorGroups(curatorEmail);
@@ -55,9 +52,33 @@ public class CuratorController {
         String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
         return curatorService.createGroupMeetings(curatorEmail, groupName, meeting);
     }
+//    @GetMapping("/{groupName}/meetings/{id}")
+//    ResponseEntity<?> getMeeting(@RequestHeader("Authorization") String authHeader, @PathVariable String groupName, @PathVariable long id) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
+//        String jwtToken = authHeader.substring(7);
+//        String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
+//        return curatorService.getMeeting(curatorEmail, groupName, id);
+//    }
+//    @PostMapping("/{groupName}/meetings/{id}")
+//    ResponseEntity<String> updateAttendanceList(@RequestHeader("Authorization") String authHeader, @PathVariable String groupName, @PathVariable long id, @RequestBody ListAttendance list) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
+//        String jwtToken = authHeader.substring(7);
+//        String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
+//        return curatorService.updateAttendanceList(curatorEmail, groupName, id, list);
+//    }
     @GetMapping("/groups/{name}/students")
-    public ResponseEntity<Set<StudentDto>> getGroupStudentsByName(@PathVariable String groupName) throws UserNotFoundByUsernameException {
+    public ResponseEntity<List<StudentDto>> getGroupStudentsByName(@PathVariable String groupName) throws UserNotFoundByUsernameException {
         return groupService.getGroupStudents(groupName);
+    }
+    @PostMapping("/{groupName}/meetings/{id}")
+    public ResponseEntity<?> UpdateListAttendance(@RequestHeader("Authorization") String authHeader, @PathVariable String groupName, @PathVariable long id, @RequestBody MeetingList studentsList) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
+        String jwtToken = authHeader.substring(7);
+        String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
+        return curatorService.updateList(curatorEmail, groupName, id, studentsList);
+    }
+    @GetMapping("/{groupName}/meetings/{id}")
+    public ResponseEntity<?> UpdateListAttendance(@RequestHeader("Authorization") String authHeader, @PathVariable String groupName, @PathVariable long id) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
+        String jwtToken = authHeader.substring(7);
+        String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
+        return curatorService.getList(curatorEmail, groupName, id);
     }
     @GetMapping("/groups/{name}")
     public ResponseEntity<GroupDto> getGroupByUsername(@PathVariable String name) throws UserNotFoundByUsernameException {

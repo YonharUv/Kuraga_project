@@ -1,8 +1,11 @@
 package bks2101.kuraga.firstProject.entitys;
 
+import bks2101.kuraga.firstProject.dto.MeetingList;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,9 +28,9 @@ public class Curator {
     @JoinColumn(name="supervisor_id")
     private Supervisor supervisor;
     @OneToMany(mappedBy = "curator")
-    private Set<Group> groups;
+    private List<Group> groups;
     @OneToMany(mappedBy = "curator")
-    private  Set<Meeting> meetings;
+    private List<Meeting> meetings;
     public void AddMeetings(Meeting meeting) {
         this.meetings.add(meeting);
     }

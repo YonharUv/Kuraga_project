@@ -3,6 +3,11 @@ package bks2101.kuraga.firstProject.entitys;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Entity
 @NoArgsConstructor
 @Setter
@@ -22,4 +27,13 @@ public class Student {
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
+    @Transient
+    private Map<Long, Boolean> attendance = new HashMap<>();
+    public Map<Long, Boolean> addAttendance(long id) {
+        this.attendance.put(id, false);
+        return this.attendance;
+    }
+    public void ChangeAttendance(long id, boolean mark) {
+        this.attendance.put(id, mark);
+    }
 }

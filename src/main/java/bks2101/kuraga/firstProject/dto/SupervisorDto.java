@@ -16,5 +16,5 @@ public class SupervisorDto {
     private String first_name;
     private String last_name;
     private String personal_data;
-    private Set<CuratorResponse> curators;
+    private List<CuratorResponse> curators;
 }

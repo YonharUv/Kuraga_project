@@ -3,6 +3,7 @@ package bks2101.kuraga.firstProject.entitys;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -22,9 +23,9 @@ public class Group {
     @JoinColumn(name = "curator_id")
     private Curator curator;
     @OneToMany(mappedBy = "group")
-    private Set<Student> students;
+    private List<Student> students;
     @OneToMany(mappedBy = "group")
-    private Set<Meeting> meetings;
+    private List<Meeting> meetings;
     public void AddMeeting(Meeting meeting) {
         this.meetings.add(meeting);
     }

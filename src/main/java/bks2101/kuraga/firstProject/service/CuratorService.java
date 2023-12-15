@@ -1,8 +1,6 @@
 package bks2101.kuraga.firstProject.service;
 
-import bks2101.kuraga.firstProject.dto.CuratorDto;
-import bks2101.kuraga.firstProject.dto.GroupDto;
-import bks2101.kuraga.firstProject.dto.MeetingDto;
+import bks2101.kuraga.firstProject.dto.*;
 import bks2101.kuraga.firstProject.exceptions.GroupNotFoundByCurator;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
@@ -14,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static java.lang.String.format;
@@ -29,6 +29,8 @@ public class CuratorService {
     private final SupervisorRepository supervisorRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final StudentRepository studentRepository;
+
     public ResponseEntity<List<CuratorDto>> getAllCurators() {
         var listCurators = curatorRepository.findAll();
         List<CuratorDto> curatorDtoList = listCurators.stream()
@@ -96,7 +98,8 @@ public class CuratorService {
         Curator curator = curatorRepository.getByEmail(curatorEmail);
         return ResponseEntity.ok(MappingUtil.mapToCuratorDto(curator));
     }
-    public ResponseEntity<Set<GroupDto>> getCuratorGroups(String curatorEmail) throws UserNotFoundByUsernameException {
+
+    public ResponseEntity<List<GroupDto>> getCuratorGroups(String curatorEmail) throws UserNotFoundByUsernameException {
         if (!curatorRepository.existsByEmail(curatorEmail)) {
             throw new UserNotFoundByUsernameException("Куратор", curatorEmail);
         }
@@ -104,6 +107,7 @@ public class CuratorService {
         CuratorDto curatorDto = MappingUtil.mapToCuratorDto(curator);
         return ResponseEntity.ok(curatorDto.getGroups());
     }
+
     public ResponseEntity<Set<MeetingDto>> getCuratorMeetings(String curatorEmail) throws UserNotFoundByUsernameException {
         if (!curatorRepository.existsByEmail(curatorEmail)) {
             throw new UserNotFoundByUsernameException("Куратор", curatorEmail);
@@ -130,28 +134,37 @@ public class CuratorService {
             throw new UserNotFoundByUsernameException("Куратор", curatorEmail);
         }
         Curator curator = curatorRepository.getByEmail(curatorEmail);
-        CuratorDto curatorDto = MappingUtil.mapToCuratorDto(curator);
-        if (!curatorDto.getGroups().contains(groupName)) {
-            throw new GroupNotFoundByCurator(curatorEmail, groupName);
+        if (!groupRepository.existsByName(groupName)) {
+            throw new UserNotFoundByUsernameException("Группа", groupName);
         }
         Group group = groupRepository.findByName(groupName);
+        if (!Objects.equals(group.getCurator().getEmail(), curatorEmail)) {
+            throw new GroupNotFoundByCurator(curatorEmail, groupName);
+        }
+        Journal loadedJournal = Journal.loadFromFile("journal.ser");
         Meeting meeting = MappingUtil.mapToMeeting(curator, meetingDto, group);
         curator.AddMeetings(meeting);
         group.AddMeeting(meeting);
+        MeetingList list = MappingUtil.CreateMeetingList(group.getStudents(), group.getName(), meetingDto.getId(), meeting);
+        loadedJournal.addList(curatorEmail, groupName + " " + meetingDto.getId(), list);
+        loadedJournal.saveToFile("journal.ser");
+        meeting.setGroup(group);
         curatorRepository.save(curator);
+        meetingRepository.save(meeting);
         groupRepository.save(group);
         return ResponseEntity.ok(meetingDto);
     }
+
     public ResponseEntity<String> deleteCurator(String email) throws UserNotFoundByUsernameException {
         if (!curatorRepository.existsByEmail(email)) {
             throw new UserNotFoundByUsernameException("Куратор", email);
         }
         Curator curator = curatorRepository.findByEmail(email);
         var groups = curator.getGroups();
-        for (Group group: groups) {
+        for (Group group : groups) {
             group.setCurator(null);
-            Set<Meeting> meetingsGroup = group.getMeetings();
-            for(Meeting meeting: meetingsGroup) {
+            List<Meeting> meetingsGroup = group.getMeetings();
+            for (Meeting meeting : meetingsGroup) {
                 meeting.setCurator(null);
                 meetingRepository.save(meeting);
             }
@@ -159,5 +172,49 @@ public class CuratorService {
         }
         curatorRepository.delete(curator);
         return ResponseEntity.ok(format("Куратор %s успешно удален", email));
+    }
+    public ResponseEntity<?> updateList(String curatorEmail, String groupName, long id, MeetingList studentsList) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
+        if (!curatorRepository.existsByEmail(curatorEmail)) {
+            throw new UserNotFoundByUsernameException("Куратор", curatorEmail);
+        }
+        if (!groupRepository.existsByName(groupName)) {
+            throw new UserNotFoundByUsernameException("Группа", groupName);
+        }
+        Group group = groupRepository.findByName(groupName);
+        if (!Objects.equals(group.getCurator().getEmail(), curatorEmail)) {
+            throw new GroupNotFoundByCurator(curatorEmail, groupName);
+        }
+
+        Journal loadedJournal = Journal.loadFromFile("journal.ser");
+        if (loadedJournal.check(curatorEmail, groupName + " " + id)) {
+            var journal = loadedJournal.getJournal();
+            var lists = journal.get(curatorEmail);
+            var list = lists.get(groupName + " " + id);
+            list.setList(studentsList.getList());
+            loadedJournal.saveToFile("journal.ser");
+            return ResponseEntity.ok(list);
+        }
+        return ResponseEntity.ok("Не удалось обновить " + id + " у группы " + groupName);
+    }
+
+    public ResponseEntity<?> getList(String curatorEmail, String groupName, long id) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
+        if (!curatorRepository.existsByEmail(curatorEmail)) {
+            throw new UserNotFoundByUsernameException("Куратор", curatorEmail);
+        }
+        Curator curator = curatorRepository.getByEmail(curatorEmail);
+        if (!groupRepository.existsByName(groupName)) {
+            throw new UserNotFoundByUsernameException("Группа", groupName);
+        }
+        Group group = groupRepository.findByName(groupName);
+        if (!Objects.equals(group.getCurator().getEmail(), curatorEmail)) {
+            throw new GroupNotFoundByCurator(curatorEmail, groupName);
+        }
+        Journal loadedJournal = Journal.loadFromFile("journal.ser");
+        if (loadedJournal.check(curatorEmail, groupName + " " + id)) {
+            var journal = loadedJournal.getJournal();
+            var lists = journal.get(curatorEmail);
+            return ResponseEntity.ok(lists.get(groupName + " " + id));
+        }
+        return ResponseEntity.ok("Не удалось найти " + id + " у группы " + groupName);
     }
 }

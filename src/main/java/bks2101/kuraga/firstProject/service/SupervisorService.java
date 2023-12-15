@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -69,11 +70,11 @@ public class SupervisorService {
     }
     public ResponseEntity addCurators(String email, RequestAddCurators curators_email) {
         Supervisor newSupervisor = supervisorRepository.findByEmail(email);
-        Set<String> curatorsEmail = curators_email.getCurators_email();
-        Set<Curator> curators = curatorsEmail.stream()
+        List<String> curatorsEmail = curators_email.getCurators_email();
+        List<Curator> curators = curatorsEmail.stream()
                 .filter(curatorRepository::existsByEmail)
                 .map(curatorRepository::getByEmail)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
         for (Curator curator: curators) {
             Supervisor oldSupervisor = curator.getSupervisor();
             oldSupervisor.deleteCurator(curator);

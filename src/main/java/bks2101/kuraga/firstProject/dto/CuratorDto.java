@@ -17,6 +17,6 @@ public class CuratorDto {
     private String first_name;
     private String last_name;
     private String personal_data;
-    private Set<GroupDto> groups;
+    private List<GroupDto> groups;
     private String supervisor_email;
 }

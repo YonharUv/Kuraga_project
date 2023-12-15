@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 import static java.lang.String.format;
@@ -35,7 +36,7 @@ public class GroupController {
         return groupService.updateGroup(name, group);
     }
     @GetMapping("/{name}/students")
-    public ResponseEntity<Set<StudentDto>> getGroupStudentsByName(@PathVariable String groupName) throws UserNotFoundByUsernameException {
+    public ResponseEntity<List<StudentDto>> getGroupStudentsByName(@PathVariable String groupName) throws UserNotFoundByUsernameException {
         return groupService.getGroupStudents(groupName);
     }
     @GetMapping("/{name}")

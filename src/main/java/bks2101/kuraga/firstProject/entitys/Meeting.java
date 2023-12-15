@@ -17,11 +17,12 @@ public class Meeting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private long number;
     private LocalDateTime date;
     private String topic;
     private String location;
     @ManyToOne
-    @JoinColumn(name = "group_id", nullable = false)
+    @JoinColumn(name = "group_name", nullable = false)
     private Group group;
     @ManyToOne
     @JoinColumn(name = "curator_id")

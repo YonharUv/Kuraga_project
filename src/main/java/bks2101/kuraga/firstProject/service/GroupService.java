@@ -51,9 +51,9 @@ public class GroupService {
             Curator curator = curatorRepository.getByEmail(groupDto.getCurator_email());
             group.setCurator(curator);
             if (groupDto.getMeetings() != null) {
-                Set<Meeting> meetings = groupDto.getMeetings().stream()
+                List<Meeting> meetings = groupDto.getMeetings().stream()
                         .map(meetingDto -> mapToMeeting(curator, meetingDto, group))
-                        .collect(Collectors.toSet());
+                        .collect(Collectors.toList());
                 meetingRepository.saveAll(meetings);
                 group.setMeetings(meetings);
             }
@@ -61,9 +61,9 @@ public class GroupService {
         group.setName(groupDto.getName());
         group.setFaculty_name(groupDto.getFaculty_name());
         if (groupDto.getStudents() != null) {
-            Set<Student> students = groupDto.getStudents().stream()
+            List<Student> students = groupDto.getStudents().stream()
                     .map(studentDto -> mapToStudent(studentDto, group))
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
             group.setStudents(students);
             studentRepository.saveAll(students);
         }
@@ -91,9 +91,9 @@ public class GroupService {
             Curator curator = curatorRepository.getByEmail(groupDto.getCurator_email());
             group.setCurator(curator);
             if (groupDto.getMeetings() != null) {
-                Set<Meeting> meetings = groupDto.getMeetings().stream()
+                List<Meeting> meetings = groupDto.getMeetings().stream()
                         .map(meetingDto -> mapToMeeting(curator, meetingDto, group))
-                        .collect(Collectors.toSet());
+                        .collect(Collectors.toList());
                 group.setMeetings(meetings);
                 meetingRepository.saveAll(meetings);
             }
@@ -101,9 +101,9 @@ public class GroupService {
         group.setName(groupDto.getName());
         group.setFaculty_name(groupDto.getFaculty_name());
         if (groupDto.getStudents() != null) {
-            Set<Student> students = groupDto.getStudents().stream()
+            List<Student> students = groupDto.getStudents().stream()
                     .map(studentDto -> mapToStudent(studentDto, group))
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
             group.setStudents(students);
             studentRepository.saveAll(students);
         }
@@ -123,7 +123,7 @@ public class GroupService {
         return ResponseEntity.ok("Группа " + groupName + " успешна удалена");
     }
 
-    public ResponseEntity<Set<StudentDto>> getGroupStudents(String groupName) throws UserNotFoundByUsernameException {
+    public ResponseEntity<List<StudentDto>> getGroupStudents(String groupName) throws UserNotFoundByUsernameException {
         if (!groupRepository.existsByName(groupName)) {
             throw new UserNotFoundByUsernameException("Группа", groupName);
         }
