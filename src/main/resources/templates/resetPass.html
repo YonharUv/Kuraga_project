@@ -40,12 +40,16 @@
             }),
             success: function(response) {
                 var successMessageContainer = $('#successMessage');
-                successMessageContainer.html(response);
+                // alert(response);
+                alert("Ваш пароль успешно изменен");
+                window.location.href = "/auth";
+                
+
                 $('#errorMessage').empty();  // Очищаем контейнер с ошибками
             },
             error: function(error) {
                 var errorMessage = JSON.parse(error.responseText).message;
-                $('#errorMessage').html('Ошибка: ' + errorMessage);
+                alert('Ошибка: ' + errorMessage);
                 $('#successMessage').empty();  // Очищаем контейнер с успешными сообщениями
             }
         });

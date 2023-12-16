@@ -29,11 +29,11 @@
             contentType: 'application/json;charset=UTF-8',
             success: function(response) {
                 var responseContainer = $('#responseContent');
-                responseContainer.html(response);
+                alert(response);
             },
             error: function(error) {
                 var errorMessage = JSON.parse(error.responseText).message;
-                $('#responseContent').html('Ошибка: ' + errorMessage);
+                alert('Ошибка: ' + errorMessage);
             }
         });
     }
