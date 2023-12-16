@@ -129,9 +129,9 @@ nav a {
     transition: background-color 0.3s;
 }
 
-nav a:last-child {
-    margin-left: auto;
-}
+/*nav a:last-child {*/
+/*    margin-left: auto;*/
+/*}*/
 
 nav a:hover {
     background-color: #ffb800;

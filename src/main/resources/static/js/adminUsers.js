@@ -73,7 +73,6 @@ function getAllUsers() {
 }
     tableHtml += '</tr>';
 }
-
     tableHtml += '</table>';
 
     // Выводим таблицу на страницу

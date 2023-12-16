@@ -12,7 +12,6 @@
     <a href="/admin/panel/users">Users</a>
     <a href="/admin/panel/curators">Curators</a>
     <a href="/admin/panel/supervisors">Supervisors</a>
-    <a href="#logout">Log out</a>
 </nav>
 
 <div class="form-container">
@@ -135,10 +134,10 @@
                 url: "/admin/supervisor/" + supervisorEmail + "/curators",
                 data: JSON.stringify(requestData),
                 success: function (response) {
-                    $("#addCuratorsToSupervisorResultContainer").html("Response: " + JSON.stringify(response));
+                    alert("Куратор добавлен")
                 },
                 error: function (error) {
-                    $("#addCuratorsToSupervisorResultContainer").html("Error: " + JSON.stringify(error));
+                    alert("Ошибка")
                 }
             });
         });
@@ -186,11 +185,11 @@
             type: 'DELETE',
             success: function(response) {
                 /* Отображение результата в блоке с id="deleteSupervisorResultContainer" */
-                $('#deleteSupervisorResultContainer').html(response);
+                alert("Пользователь удален")
             },
             error: function(error) {
                 /* В случае ошибки выводим сообщение об ошибке */
-                $('#deleteSupervisorResultContainer').html('Ошибка: ' + error.responseText);
+                alert("Ошибка")
             }
         });
     }
