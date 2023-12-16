@@ -64,14 +64,13 @@
 <div class="form-container">
     <h2>Добавить кураторов по email супервизора</h2>
     <form id="addCuratorsToSupervisorForm">
-        <!--<label for="supervisorEmail">Email супервизора:</label>-->
         <div class="input-container">
             <label for="supervisorEmailCurators">Email супервизора:</label>
-            <input type="text" id="supervisorEmailCurators" name="email" required placeholder=" "/><br/>
+            <input type="text" id="supervisorEmailCurators" name="email" required placeholder=""/><br/>
         </div>
         <div class="input-container">
             <label for="curatorsEmails">Email кураторов (разделите запятыми):</label>
-            <input type="text" id="curatorsEmails" name="curators_emails" required placeholder=" "/><br/>
+            <input type="text" id="curatorsEmails" name="curators_emails" required placeholder=""/><br/>
         </div>
         <button type="button" id="addCuratorsToSupervisorButton" class="align-right">Добавить кураторов</button>
     </form>
@@ -120,7 +119,32 @@
 
 <script th:inline="javascript">
 
+
+    $(document).ready(function () {
+        $("#addCuratorsToSupervisorButton").click(function () {
+            var supervisorEmail = $("#supervisorEmailCurators").val();
+            var curatorsEmails = $("#curatorsEmails").val().split(', ');
+
+            var requestData = {
+                curators_email: curatorsEmails
+            };
+
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "/admin/supervisor/" + supervisorEmail + "/curators",
+                data: JSON.stringify(requestData),
+                success: function (response) {
+                    $("#addCuratorsToSupervisorResultContainer").html("Response: " + JSON.stringify(response));
+                },
+                error: function (error) {
+                    $("#addCuratorsToSupervisorResultContainer").html("Error: " + JSON.stringify(error));
+                }
+            });
+        });
+    });
     function updateSupervisor() {
+
         var form = document.getElementById('updateSupervisorForm');
         var supervisorData = {
             "email": form.email.value,

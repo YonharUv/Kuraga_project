@@ -68,11 +68,15 @@ public class AuthController {
 
     @PostMapping("/forgotPass/{token}/resetPass")
     public ResponseEntity<?> resetPass(@PathVariable String token, @RequestBody ResetPassRequest resetRequest) {
+        if (!resetRequest.getPassword().equals(resetRequest.getConfirmPassword())) {
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Пароли не совпадают"), HttpStatus.BAD_REQUEST);
+        }
         boolean reset = userService.resetPass(token, resetRequest.getPassword());
 
         if (!reset) {
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(), "Не корректный токен сброса пароля"), HttpStatus.BAD_REQUEST);
         }
+
         return ResponseEntity.ok("Пароль был успешно изменён");
     }
 }

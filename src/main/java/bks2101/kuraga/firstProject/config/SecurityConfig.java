@@ -34,7 +34,7 @@ public class SecurityConfig  {
                         .requestMatchers("/activate/*").permitAll()
                         .requestMatchers("/forgotPass/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/supervisor/**").hasAnyAuthority("ADMIN", "SUPERVISOR")
+                        .requestMatchers("/supervisor/**").hasAnyAuthority("ADMIN", "SUPERVISOR", "USER")
                         .requestMatchers("/groups/**").hasAnyAuthority("ADMIN", "SUPERVISOR")
                         .requestMatchers("/students/**").hasAnyAuthority("ADMIN", "SUPERVISOR", "USER")
                         .requestMatchers("/**").hasAnyAuthority("ADMIN", "USER", "SUPERVISOR")

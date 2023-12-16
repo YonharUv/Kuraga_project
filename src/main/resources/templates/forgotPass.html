@@ -7,19 +7,37 @@
 </head>
 <body>
 
-    <h2>Сброс пароля</h2>
-    <form th:action="@{/forgotPass/{email}}" method="post" id="forgotPass">
-        <label for="username"></label>
-        <input type="text" id="username" name="username" required="required" placeholder="Введите ваш email"/>
+<h2>Сброс пароля</h2>
+<form id="forgotPass">
+    <label for="username"></label>
+    <input type="text" id="username" name="username" required="required" placeholder="Введите ваш email"/>
 
-            <div th:if="${errorMessage}" id="errorMessage">
-                <p th:text="${errorMessage}"></p>
-            </div>
-        <button type="submit" >Сбросить пароль</button>
-    </form>
+    <div id="errorMessage"></div>
+    <button type="button" onclick="submitForm()">Сбросить пароль</button>
+</form>
 
+<div id="responseContent"></div>
 
+<script th:inline="javascript" src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+<script th:inline="javascript">
+    function submitForm() {
+        var email = $('#username').val();
+        $.ajax({
+            url: '/forgotPass/' + email,
+            type: 'POST',
+            contentType: 'application/json;charset=UTF-8',
+            success: function(response) {
+                var responseContainer = $('#responseContent');
+                responseContainer.html(response);
+            },
+            error: function(error) {
+                var errorMessage = JSON.parse(error.responseText).message;
+                $('#responseContent').html('Ошибка: ' + errorMessage);
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
