@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8"/>
     <title>Админ Панель</title>
@@ -8,9 +8,9 @@
 </head>
 <body>
 <nav>
-    <a href="/admin/panel/users">Users</a>
-    <a href="/admin/panel/curators">Curators</a>
-    <a href="/admin/panel/supervisors">Supervisors</a>
+    <a href="#Users">Users</a>
+    <a href="#Curators">Curators</a>
+    <a href="#Supervisors">Supervisors</a>
     <a href="#logout">Log out</a>
 </nav>
 
@@ -35,9 +35,6 @@
         </div>
         <button type="button" onclick="submitForm()" class="align-right">Зарегистрировать</button>
     </form>
-
-    <!-- Отображение данных ответа -->
-    <div id="responseContainer"></div>
 </div>
 
 <div class="form-container">
@@ -82,8 +79,20 @@
         <button type="button" id="banUserButton" class="align-right">Забанить пользователя</button>
     </form>
 </div>
-
 <div id="banResultContainer"></div>
+
+<div class="form-container">
+    <h2>Разбанить пользователя</h2>
+    <form id="unbanUserForm">
+        <div class="input-container">
+            <label for="unbanUserId"></label>
+            <input type="text" id="unbanUserId" name="id" required placeholder="ID пользователя"/><br/>
+        </div>
+        <button type="button" id="unbanUserButton" class="align-right">Разбанить пользователя</button>
+    </form>
+</div>
+
+<div id="unbanResultContainer"></div>
 
 <div class="form-container">
     <h2>Установить привилегии "Supervisor" пользователю</h2>
@@ -95,7 +104,6 @@
             <button type="button" id="setSupervisorButton" class="align-right">Установить привилегии</button>
     </form>
 </div>
-
 <div id="setSupervisorResultContainer"></div>
 
 <div class="form-container">
@@ -110,5 +118,7 @@
 </div>
 
 <div id="deleteUserResultContainer"></div>
+
+
 </body>
 </html>

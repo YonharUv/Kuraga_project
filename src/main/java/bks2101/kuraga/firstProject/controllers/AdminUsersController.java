@@ -66,6 +66,11 @@ public class AdminUsersController {
         return ResponseEntity.ok("Привелегии пользователя успешно изменены");
     }
 
+    @PostMapping("/users/{id}/setUser")
+    public ResponseEntity setUser(@PathVariable Long id) throws NotFoundByIdException {
+        userService.setRole(userService.findUserByID(id), Role.USER);
+        return ResponseEntity.ok("Пользователь успешно разбанен");
+    }
     @DeleteMapping("/user/delete/{id}")
     public ResponseEntity deleteUser(@PathVariable Long id) throws NotFoundByIdException {
         return userService.deleteUserByID(id);
