@@ -283,14 +283,22 @@
                     }
                     tableHtml += '</tr>';
 
-                    // Добавляем строки с данными супервизоров
-                    for (var i = 0; i < supervisors.length; i++) {
-                        tableHtml += '<tr>';
-                        for (var key in supervisors[i]) {
+                // Добавляем строки с данными супервизоров
+                for (var i = 0; i < supervisors.length; i++) {
+                    tableHtml += '<tr>';
+                    for (var key in supervisors[i]) {
+                        if (key == 'curators') {
+                            var supervisorCurators = '\n';
+                            for (var j = 0; j < supervisors[i][key].length; j++) {
+                                supervisorCurators += supervisors[i][key][j]['curator_email'] + '<br>'
+                            }
+                            tableHtml += '<td>' + supervisorCurators + '</td>';
+                        } else {
                             tableHtml += '<td>' + supervisors[i][key] + '</td>';
                         }
-                        tableHtml += '</tr>';
                     }
+                    tableHtml += '</tr>';
+                }
 
                     tableHtml += '</table>';
 
@@ -310,14 +318,6 @@
 
 
 
-    function addCuratorsToSupervisor() {
-        var supervisorEmail = $('#supervisorEmailCurators').val();
-        var curatorsEmails = $('#curatorsEmails').val();
-        $.post('/admin/supervisor/' + supervisorEmail + '/curators', { curators_emails: curatorsEmails }, function(response) {
-            /* Отображение результата в блоке с id="addCuratorsToSupervisorResultContainer" */
-            $('#addCuratorsToSupervisorResultContainer').html(response);
-        });
-    }
 </script>
 
 </body>

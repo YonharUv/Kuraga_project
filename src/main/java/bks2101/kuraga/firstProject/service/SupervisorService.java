@@ -105,7 +105,6 @@ public class SupervisorService {
             throw new UserAlreadyExistsException("Руководитель кураторов", email);
         }
         if (supervisor.getFirst_name() != null) {
-
             oldSupervisor.setFirst_name(supervisor.getFirst_name());
         }
         if (supervisor.getLast_name() != null) {
