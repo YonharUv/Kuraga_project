@@ -80,7 +80,7 @@ tr:nth-child(even) {
     margin-left: 20px;
 }
 
-#userByIdContainer,#userByUsernameResultContainer {
+#userByIdContainer,#userByUsernameResultContainer,#supervisorByEmailResultContainer {
     /* Другие стили */
     width:60%;
     margin: 50px auto;
@@ -97,19 +97,19 @@ tr:nth-child(even) {
     display: none;
 }
 
-#userByIdContainer.show,#userByUsernameResultContainer.show {
+#userByIdContainer.show,#userByUsernameResultContainer.show,#supervisorByEmailResultContainer.show {
     height: auto;
     opacity: 1;
     display: block;
 }
 
-#userByIdContainer h3,#userByUsernameResultContainer h3 {
+#userByIdContainer h3,#userByUsernameResultContainer h3,#supervisorByEmailResultContainer h3 {
     font-size: 1.5em;
     color: #ff7f00; /* Цвет заголовка */
     margin-bottom: 15px;
 }
 
-#userByIdContainer p,#userByUsernameResultContainer {
+#userByIdContainer p,#userByUsernameResultContainer p,#supervisorByEmailResultContainer p {
     margin-bottom: 10px;
     color: #333;
 }
