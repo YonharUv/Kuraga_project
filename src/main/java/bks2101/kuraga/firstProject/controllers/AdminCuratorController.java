@@ -39,6 +39,10 @@ public class AdminCuratorController {
     ResponseEntity<List<CuratorDto>> AllCurators() {
         return curatorService.getAllCurators();
     }
+    @GetMapping("/curators/{curatorEmail}")
+    ResponseEntity<CuratorDto> getCurator(String curatorEmail) throws UserNotFoundByUsernameException {
+        return curatorService.getCuratorByEmail(curatorEmail);
+    }
 
     @DeleteMapping("/curator/delete/{email}")
     public ResponseEntity deleteCurator(@PathVariable String email) throws UserNotFoundByUsernameException {
