@@ -129,12 +129,18 @@
                 tableHtml += '</tr>';
 
                 $.each(curators, function(i, curator) {
-                    tableHtml += '<tr>';
-                    for (var key in curator) {
-                        tableHtml += '<td>' + curator[key] + '</td>';
-                    }
-                    tableHtml += '</tr>';
-                });
+    tableHtml += '<tr>';
+    for (var key in curator) {
+        if (key === 'groups') {
+            // Преобразовать массив в строку или другой формат
+            var groupsString = curator[key].map(group => group.name).join(', ');
+            tableHtml += '<td>' + groupsString + '</td>';
+        } else {
+            tableHtml += '<td>' + curator[key] + '</td>';
+        }
+    }
+    tableHtml += '</tr>';
+});
 
                 tableHtml += '</table>';
 
