@@ -8,6 +8,7 @@ import bks2101.kuraga.firstProject.entitys.ApplicationUser;
 import bks2101.kuraga.firstProject.entitys.Role;
 import bks2101.kuraga.firstProject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,7 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.String.format;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -50,6 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(registrationUserDto.getPassword()));
         user.setRole(Role.USER);
         user.setActivationCode(UUID.randomUUID().toString());
+        log.info("User created successfully {}", registrationUserDto.getEmail());
         return userRepository.save(user);
     }
 
@@ -101,6 +103,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
     public ApplicationUser banUser(ApplicationUser user) {
         user.setRole(Role.BANNED);
+        log.info("User have been ban {}", user.getEmail());
         return userRepository.save(user);
     }
 
@@ -134,12 +137,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UserNotFoundByUsernameException("Пользователя",email);
         }
         userRepository.delete(userRepository.findByEmail(email));
+        log.info("User deleted successfully {}", email);
         return ResponseEntity.ok(format("Пользователь %s успешно удален", email));
     }
     public ResponseEntity exchangeUser(ApplicationUser newUser, long id) throws NotFoundByIdException {
         if (!userRepository.existsById(id)) {
             throw new NotFoundByIdException("Пользователя", id);
         }
+        log.info("User updated successfully {}", newUser.getEmail());
         return ResponseEntity.ok(userRepository.findById(id).map(applicationUser -> {
             applicationUser.setUsername(newUser.getUsername());
             applicationUser.setEmail(newUser.getEmail());

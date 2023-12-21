@@ -9,6 +9,7 @@ import bks2101.kuraga.firstProject.repository.*;
 import bks2101.kuraga.firstProject.utils.JwtTokenUtils;
 import bks2101.kuraga.firstProject.utils.MappingUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import static java.lang.String.format;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CuratorService {
     private final CuratorRepository curatorRepository;
     private final MeetingRepository meetingRepository;
@@ -51,6 +53,7 @@ public class CuratorService {
         if (curatorRepository.existsByEmail(curatorDto.getEmail())) {
             throw new UserAlreadyExistsException("Куратор", curatorDto.getEmail());
         }
+        log.info("Curator created successfully: {}", curatorDto.getEmail());
         Curator curator = new Curator();
         curator.setFirst_name(curatorDto.getFirst_name());
         curator.setLast_name(curatorDto.getLast_name());
@@ -138,6 +141,9 @@ public class CuratorService {
             throw new UserNotFoundByUsernameException("Куратор", email);
         }
         Curator curator = curatorRepository.findByEmail(email);
+        Supervisor supervisor = curator.getSupervisor();
+        supervisor.deleteCurator(curator);
+        supervisorRepository.save(supervisor);
         var groups = curator.getGroups();
         for (Group group : groups) {
             group.setCurator(null);
@@ -149,6 +155,7 @@ public class CuratorService {
             groupRepository.save(group);
         }
         curatorRepository.delete(curator);
+        log.info("Curator deleted successfully: {}", email);
         return ResponseEntity.ok(format("Куратор %s успешно удален", email));
     }
     public ResponseEntity<?> updateList(String curatorEmail, String groupName, long id, MeetingList studentsList) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {

@@ -14,6 +14,7 @@ import bks2101.kuraga.firstProject.repository.MeetingRepository;
 import bks2101.kuraga.firstProject.repository.StudentRepository;
 import bks2101.kuraga.firstProject.utils.MappingUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 
 import static bks2101.kuraga.firstProject.utils.MappingUtil.mapToMeeting;
 import static bks2101.kuraga.firstProject.utils.MappingUtil.mapToStudent;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GroupService {
@@ -68,6 +69,7 @@ public class GroupService {
             studentRepository.saveAll(students);
         }
         groupRepository.save(group);
+        log.info("Group created successfully {}", groupDto.getName());
         return ResponseEntity.ok(MappingUtil.mapToGroupDto(group));
     }
 
@@ -108,6 +110,7 @@ public class GroupService {
             studentRepository.saveAll(students);
         }
         groupRepository.save(group);
+        log.info("Group updated successfully {}", groupName);
         return ResponseEntity.ok(MappingUtil.mapToGroupDto(group));
     }
 
@@ -120,6 +123,7 @@ public class GroupService {
         studentRepository.deleteAll(group.getStudents());
         meetingRepository.deleteAll(group.getMeetings());
         groupRepository.delete(group);
+        log.info("Group deleted successfully {}", groupName);
         return ResponseEntity.ok("Группа " + groupName + " успешна удалена");
     }
 

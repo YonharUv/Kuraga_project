@@ -15,6 +15,7 @@ import bks2101.kuraga.firstProject.repository.UserRepository;
 import bks2101.kuraga.firstProject.utils.JwtTokenUtils;
 import bks2101.kuraga.firstProject.utils.MappingUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SupervisorService {
@@ -65,7 +66,7 @@ public class SupervisorService {
         supervisor.setEmail(reqSupervisor.getEmail());
         ApplicationUser supervisorUser = userRepository.findByEmail(reqSupervisor.getEmail());
         supervisor.setUsername(supervisorUser.getUsername());
-
+        log.info("Supervisor created successfully: {}", reqSupervisor.getEmail());
         return ResponseEntity.ok(supervisorRepository.save(supervisor));
     }
     public ResponseEntity addCurators(String email, RequestAddCurators curators_email) {
@@ -74,7 +75,7 @@ public class SupervisorService {
         List<Curator> curators = curatorsEmail.stream()
                 .filter(curatorRepository::existsByEmail)
                 .map(curatorRepository::getByEmail)
-                .collect(Collectors.toList());
+                .toList();
         for (Curator curator: curators) {
             Supervisor oldSupervisor = curator.getSupervisor();
             oldSupervisor.deleteCurator(curator);
@@ -84,6 +85,7 @@ public class SupervisorService {
             curatorRepository.save(curator);
         }
         supervisorRepository.save(newSupervisor);
+        log.info(format("Supervisor %s have been add curators: {}", email), curators_email.getCurators_email());
         return ResponseEntity.ok("Success");
     }
 
@@ -122,6 +124,7 @@ public class SupervisorService {
                     .collect(Collectors.toSet());
             oldSupervisor.setCurators(curatorsSet);
         }
+        log.info("Supervisor %s have been updated: {}", email);
         return ResponseEntity.ok(supervisorRepository.save(oldSupervisor));
     }
 
@@ -138,6 +141,7 @@ public class SupervisorService {
             fictionalSupervisor.addCurator(curator);
             supervisorRepository.save(fictionalSupervisor);
         }
+        log.info("Supervisor deleted successfully: {}", email);
         supervisorRepository.delete(supervisor);
         return ResponseEntity.ok(format("Руководитель кураторов %s успешно удален", email));
     }
