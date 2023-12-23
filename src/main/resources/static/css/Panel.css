@@ -24,6 +24,7 @@ nav {
 /* Стили для контейнера с таблицей */
 #usersDataContainer {
     margin-top: 20px;
+
 }
 
 
@@ -31,7 +32,7 @@ nav {
     overflow: hidden;
     max-height: 0;
     overflow-y: auto;
-    transition: max-height 0.3s ease-out; /* Выберите желаемую длительность и функцию анимации */
+    transition: max-height 1s ease-out;
 }
 
 .table-container.show {
@@ -78,6 +79,40 @@ tr:nth-child(even) {
     display: block;
     margin-left: 20px;
 }
+
+#userByIdContainer,#userByUsernameResultContainer,#supervisorByEmailResultContainer {
+    /* Другие стили */
+    width:60%;
+    margin: 50px auto;
+    padding: 20px;
+    border: 2px solid #ff7f00;
+    border-radius: 8px;
+    background-color: #fff;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: height 30s, opacity 10s;
+    display: none;
+}
+
+#userByIdContainer.show,#userByUsernameResultContainer.show,#supervisorByEmailResultContainer.show {
+    height: auto;
+    opacity: 1;
+    display: block;
+}
+
+#userByIdContainer h3,#userByUsernameResultContainer h3,#supervisorByEmailResultContainer h3 {
+    font-size: 1.5em;
+    color: #ff7f00; /* Цвет заголовка */
+    margin-bottom: 15px;
+}
+
+#userByIdContainer p,#userByUsernameResultContainer p,#supervisorByEmailResultContainer p {
+    margin-bottom: 10px;
+    color: #333;
+}
 .nav-item h2 {
     font-size: 1.5em;
     color: #333;
@@ -94,9 +129,9 @@ nav a {
     transition: background-color 0.3s;
 }
 
-nav a:last-child {
-    margin-left: auto;
-}
+/*nav a:last-child {*/
+/*    margin-left: auto;*/
+/*}*/
 
 nav a:hover {
     background-color: #ffb800;
@@ -179,7 +214,7 @@ input {
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
-    margin-bottom: 10px;
+    margin-top: 18px;
 }
 
 input:focus {

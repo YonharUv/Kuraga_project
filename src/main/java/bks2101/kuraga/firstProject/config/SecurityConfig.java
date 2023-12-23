@@ -45,10 +45,15 @@ public class SecurityConfig  {
                 .csrf((csrf) -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/auth").permitAll()
-                        .requestMatchers("/registration").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
-                        .anyRequest().authenticated()
+                                .requestMatchers("/auth").permitAll()
+                                .requestMatchers("/activate/*").permitAll()
+                                .requestMatchers("/forgotPass/**").permitAll()
+                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                                .requestMatchers("/supervisor/**").hasAnyAuthority("ADMIN", "SUPERVISOR", "USER")
+                                .requestMatchers("/groups/**").hasAnyAuthority("ADMIN", "SUPERVISOR")
+                                .requestMatchers("/students/**").hasAnyAuthority("ADMIN", "SUPERVISOR", "USER")
+                                .requestMatchers("/**").hasAnyAuthority("ADMIN", "USER", "SUPERVISOR")
+//                        .requestMatchers("/**").permitAll()
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

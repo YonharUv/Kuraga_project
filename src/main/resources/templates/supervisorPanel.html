@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Домашняя страница супервизора</title>
-    <link rel="stylesheet" href="Panel.css">
+    <link th:href="@{/css/Panel.css}" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
 
 <nav class="nav-container">
     <h2>Информация о супервизоре</h2>
-    <div class="info">
-        <p>Имя: <span th:text="${supervisorInfo.name}"></span></p>
-        <p>Email: <span th:text="${supervisorInfo.email}"></span></p>
+    <div id="supervisorInfo" class="info">
     </div>
 </nav>
 
-<!-- Форма для вызова маппинга /curators/{curatorEmail}/groups -->
 <div class="form-container">
     <form th:action="@{/curators/{curatorEmail}/groups}" method="get">
         <div class="input-container">
@@ -28,8 +26,6 @@
 </div>
 
 
-
-<!-- Форма для вызова маппинга /curators/{curatorEmail} -->
 <div class="form-container">
     <form th:action="@{/curators/{curatorEmail}}" method="get">
         <div class="input-container">
@@ -41,7 +37,6 @@
     </form>
 </div>
 
-<!-- Форма для вызова маппинга /curators -->
 <div class="form-container">
     <form th:action="@{/curators}" method="get">
         <div class="input-container">
@@ -51,7 +46,6 @@
     </form>
 </div>
 
-<!-- Форма для вызова маппинга /curator/{curatorEmail}/groups/meetings -->
 <div class="form-container">
     <form th:action="@{/curator/{curatorEmail}/groups/meetings}" method="get">
         <div class="input-container">
@@ -63,7 +57,22 @@
     </form>
 </div>
 
-<!-- Добавьте другие формы по необходимости -->
+<script>
+    $(document).ready(function () {
+        // Первый запрос на получение информации о супервизоре
+        $.ajax({
+            type: 'GET',
+            url: '/',
+            success: function (data) {
+                $('#supervisorInfo').html('<p>' + JSON.stringify(data) + '</p>');
+            },
+            error: function (error) {
+                $('#supervisorInfo').html('Пользователь не является супервизором');
+            }
+        });
+
+    });
+</script>
 
 </body>
 </html>

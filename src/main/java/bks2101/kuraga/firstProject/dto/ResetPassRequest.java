@@ -6,5 +6,6 @@ import lombok.Data;
 public class ResetPassRequest {
 
     private String password;
+    private String confirmPassword;
 
 }
