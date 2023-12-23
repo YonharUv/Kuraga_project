@@ -40,7 +40,7 @@ public class AdminCuratorController {
         return curatorService.getAllCurators();
     }
     @GetMapping("/curators/{curatorEmail}")
-    ResponseEntity<CuratorDto> getCurator(String curatorEmail) throws UserNotFoundByUsernameException {
+    ResponseEntity<CuratorDto> getCurator(@PathVariable String curatorEmail) throws UserNotFoundByUsernameException {
         return curatorService.getCuratorByEmail(curatorEmail);
     }
 
