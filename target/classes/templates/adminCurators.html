@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Админ Панель</title>
-    <link th:href="@{/css/adminUsers.css}" rel="stylesheet" />
+    <link th:href="@{/css/Panel.css}" rel="stylesheet" />
     <!-- Подключение jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
@@ -12,31 +12,30 @@
     <a href="/admin/panel/users">Users</a>
     <a href="/admin/panel/curators">Curators</a>
     <a href="/admin/panel/supervisors">Supervisors</a>
-    <a href="#logout">Log out</a>
 </nav>
 
 <div class="form-container">
     <h2>Создать куратора</h2>
     <form id="createCuratorForm">
         <div class="input-container">
-            <label for="createCuratorEmail">Email куратора:</label>
-            <input type="text" id="createCuratorEmail" name="email" required placeholder=" "/><br/>
+            <label for="createCuratorEmail"></label>
+            <input type="text" id="createCuratorEmail" name="email" required placeholder="Email куратора "/><br/>
         </div>
         <div class="input-container">
-            <label for="createCuratorFirstName">Имя куратора:</label>
-            <input type="text" id="createCuratorFirstName" name="first_name" required placeholder=" "/><br/>
+            <label for="createCuratorFirstName"></label>
+            <input type="text" id="createCuratorFirstName" name="first_name" required placeholder="Имя куратора"/><br/>
         </div>
         <div class="input-container">
-            <label for="createCuratorLastName">Фамилия куратора:</label>
-            <input type="text" id="createCuratorLastName" name="last_name" required placeholder=" "/><br/>
+            <label for="createCuratorLastName"></label>
+            <input type="text" id="createCuratorLastName" name="last_name" required placeholder="Фамилия куратора"/><br/>
         </div>
         <div class="input-container">
-            <label for="createCuratorPersonalData">Личные данные куратора:</label>
-            <input type="text" id="createCuratorPersonalData" name="personal_data" required placeholder=" "/><br/>
+            <label for="createCuratorPersonalData"></label>
+            <input type="text" id="createCuratorPersonalData" name="personal_data" required placeholder="Личные данные куратора"/><br/>
         </div>
         <div class="input-container">
-            <label for="createCuratorSupervisorEmail">Email супервизора:</label>
-            <input type="text" id="createCuratorSupervisorEmail" name="supervisor_email" required placeholder=" "/><br/>
+            <label for="createCuratorSupervisorEmail"></label>
+            <input type="text" id="createCuratorSupervisorEmail" name="supervisor_email" required placeholder="Email супервизора"/><br/>
         </div>
         <button type="button" onclick="createCurator()" class="align-right">Создать куратора</button>
     </form>
@@ -46,7 +45,7 @@
 
 <div class="form-container">
     <h2>Получить всех кураторов</h2>
-    <button type="button" onclick="getAllCurators()" class="align-right">Получить всех кураторов</button>
+    <button id="getAllCuratorsButton" type="button" onclick="getAllCurators()" class="align-right">Получить всех кураторов</button>
 </div>
 
 <!-- Результат запроса будет отображен здесь -->
@@ -56,8 +55,8 @@
     <h2>Удалить куратора</h2>
     <form id="deleteCuratorForm">
         <div class="input-container">
-            <label for="deleteCuratorEmail">Email куратора:</label>
-            <input type="text" id="deleteCuratorEmail" name="email" required placeholder=" "/><br/>
+            <label for="deleteCuratorEmail"></label>
+            <input type="text" id="deleteCuratorEmail" name="email" required placeholder="Email куратора"/><br/>
         </div>
         <button type="button" onclick="deleteCurator()" class="align-right">Удалить куратора</button>
     </form>
@@ -73,10 +72,10 @@
             url: '/admin/curator/delete/' + curatorEmail,
             type: 'DELETE',
             success: function(response) {
-                $('#deleteCuratorResultContainer').html(response);
+                alert("Куратор успешно удален")
             },
             error: function(error) {
-                $('#deleteCuratorResultContainer').html('Ошибка: ' + error.responseText);
+                alert("Ошибка")
             }
         });
     }
@@ -114,12 +113,17 @@
     }
 
     function getAllCurators() {
-        $.ajax({
-            url: '/admin/curators',
-            type: 'GET',
-            contentType: 'application/json;charset=UTF-8',
-            success: function(curators) {
-                var curatorsContainer = $('#allCuratorsResult');
+        var button = document.getElementById('getAllCuratorsButton');
+        var curatorsContainer = document.getElementById('allCuratorsResult');
+        if (button.textContent === 'Получить всех кураторов') {
+            // Показываем кнопку "Свернуть"
+            button.textContent = 'Свернуть';
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/admin/curators', true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var curators = JSON.parse(xhr.responseText);
 
                 var tableHtml = '<table border="1">';
                 tableHtml += '<tr>';
@@ -128,29 +132,27 @@
                 }
                 tableHtml += '</tr>';
 
-                $.each(curators, function(i, curator) {
-    tableHtml += '<tr>';
-    for (var key in curator) {
-        if (key === 'groups') {
-            // Преобразовать массив в строку или другой формат
-            var groupsString = curator[key].map(group => group.name).join(', ');
-            tableHtml += '<td>' + groupsString + '</td>';
-        } else {
-            tableHtml += '<td>' + curator[key] + '</td>';
-        }
-    }
-    tableHtml += '</tr>';
-});
-
+                for (var i = 0; i < curators.length; i++) {
+                    tableHtml += '<tr>';
+                    for (var key in curators[i]) {
+                        tableHtml += '<td>' + curators[i][key] + '</td>';
+                    }
+                    tableHtml += '</tr>';
+                }
                 tableHtml += '</table>';
 
-                curatorsContainer.html(tableHtml);
-            },
-            error: function(error) {
-                $('#allCuratorsResult').html('Error: ' + error.responseText);
+                curatorsContainer.innerHTML = tableHtml;
             }
-        });
+        };
+        xhr.send();
+    } else{
+            button.textContent = 'Получить всех кураторов';
+            setTimeout(function() {
+                curatorsContainer.innerHTML = '';
+            }, 300);
+        }
     }
+
 
 
 
