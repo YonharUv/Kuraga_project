@@ -64,9 +64,11 @@ public class CuratorController {
 //        String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
 //        return curatorService.updateAttendanceList(curatorEmail, groupName, id, list);
 //    }
-    @GetMapping("/groups/{name}/students")
-    public ResponseEntity<List<StudentDto>> getGroupStudentsByName(@PathVariable String groupName) throws UserNotFoundByUsernameException {
-        return groupService.getGroupStudents(groupName);
+    @GetMapping("/groups/{groupName}/students")
+    public ResponseEntity<List<StudentDto>> getGroupStudentsByName(@RequestHeader("Authorization") String authHeader, @PathVariable String groupName) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
+        String jwtToken = authHeader.substring(7);
+        String curatorEmail = jwtTokenUtils.getUsername(jwtToken);
+        return groupService.getGroupStudentsByCurator(curatorEmail, groupName);
     }
     @PostMapping("/{groupName}/meetings/{id}")
     public ResponseEntity<?> UpdateListAttendance(@RequestHeader("Authorization") String authHeader, @PathVariable String groupName, @PathVariable long id, @RequestBody MeetingList studentsList) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {

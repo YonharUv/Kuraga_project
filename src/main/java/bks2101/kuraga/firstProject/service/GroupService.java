@@ -2,6 +2,7 @@ package bks2101.kuraga.firstProject.service;
 
 import bks2101.kuraga.firstProject.dto.GroupDto;
 import bks2101.kuraga.firstProject.dto.StudentDto;
+import bks2101.kuraga.firstProject.exceptions.GroupNotFoundByCurator;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
 import bks2101.kuraga.firstProject.entitys.Curator;
@@ -127,7 +128,18 @@ public class GroupService {
         return ResponseEntity.ok("Группа " + groupName + " успешна удалена");
     }
 
-    public ResponseEntity<List<StudentDto>> getGroupStudents(String groupName) throws UserNotFoundByUsernameException {
+    public ResponseEntity<List<StudentDto>> getGroupStudentsByCurator(String curatorEmail, String groupName) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
+        if (!groupRepository.existsByName(groupName)) {
+            throw new UserNotFoundByUsernameException("Группа", groupName);
+        }
+        Group group = groupRepository.findByName(groupName);
+        if (!(curatorRepository.existsByEmail(curatorEmail)) || !Objects.equals(group.getCurator().getEmail(), curatorEmail)) {
+            throw new GroupNotFoundByCurator(curatorEmail, groupName);
+        }
+        GroupDto groupDto = MappingUtil.mapToGroupDto(group);
+        return ResponseEntity.ok(groupDto.getStudents());
+    }
+    public ResponseEntity<List<StudentDto>> getGroupStudents(String groupName) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
         if (!groupRepository.existsByName(groupName)) {
             throw new UserNotFoundByUsernameException("Группа", groupName);
         }
@@ -136,3 +148,4 @@ public class GroupService {
         return ResponseEntity.ok(groupDto.getStudents());
     }
 }
+

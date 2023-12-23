@@ -2,6 +2,7 @@ package bks2101.kuraga.firstProject.controllers;
 
 import bks2101.kuraga.firstProject.dto.GroupDto;
 import bks2101.kuraga.firstProject.dto.StudentDto;
+import bks2101.kuraga.firstProject.exceptions.GroupNotFoundByCurator;
 import bks2101.kuraga.firstProject.exceptions.UserAlreadyExistsException;
 import bks2101.kuraga.firstProject.exceptions.UserNotFoundByUsernameException;
 import bks2101.kuraga.firstProject.service.GroupService;
@@ -35,8 +36,8 @@ public class GroupController {
     public ResponseEntity<GroupDto> updateGroupByName(@PathVariable String name, @RequestBody GroupDto group) throws UserNotFoundByUsernameException, UserAlreadyExistsException {
         return groupService.updateGroup(name, group);
     }
-    @GetMapping("/{name}/students")
-    public ResponseEntity<List<StudentDto>> getGroupStudentsByName(@PathVariable String groupName) throws UserNotFoundByUsernameException {
+    @GetMapping("/{groupName}/students")
+    public ResponseEntity<List<StudentDto>> getGroupStudentsByName(@PathVariable String groupName) throws UserNotFoundByUsernameException, GroupNotFoundByCurator {
         return groupService.getGroupStudents(groupName);
     }
     @GetMapping("/{name}")

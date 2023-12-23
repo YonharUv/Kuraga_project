@@ -186,7 +186,6 @@ public class CuratorService {
         if (!curatorRepository.existsByEmail(curatorEmail)) {
             throw new UserNotFoundByUsernameException("Куратор", curatorEmail);
         }
-        Curator curator = curatorRepository.getByEmail(curatorEmail);
         if (!groupRepository.existsByName(groupName)) {
             throw new UserNotFoundByUsernameException("Группа", groupName);
         }

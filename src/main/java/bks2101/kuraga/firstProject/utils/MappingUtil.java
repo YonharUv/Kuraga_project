@@ -97,6 +97,7 @@ public class MappingUtil {
 
     public static MeetingDto mapToMeetingDto(Meeting meeting) {
         return MeetingDto.builder()
+                .id(meeting.getNumber())
                 .date(meeting.getDate())
                 .topic(meeting.getTopic())
                 .location(meeting.getLocation())

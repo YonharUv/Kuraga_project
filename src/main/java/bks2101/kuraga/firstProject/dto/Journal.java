@@ -15,9 +15,9 @@ import java.util.Map;
 public class Journal implements Serializable {
     private Map<String, Map<String, MeetingList>> journal = new HashMap<>();
     public void addList(String curatorName, String groupName, MeetingList list) {
-        Map<String, MeetingList> journalList = new HashMap<>();
-        journalList.put(groupName, list);
-        this.journal.put(curatorName, journalList);
+        var journalCurator = journal.get(curatorName);
+        journalCurator.put(groupName, list);
+        this.journal.put(curatorName, journalCurator);
     }
     public boolean check(String curatorName, String groupName) {
         if (!this.journal.containsKey(curatorName)) {

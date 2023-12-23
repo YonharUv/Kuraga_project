@@ -1,6 +1,6 @@
 package bks2101.kuraga.firstProject.config;
 
-import bks2101.kuraga.firstProject.models.Role;
+import bks2101.kuraga.firstProject.entitys.Role;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.DialectOverride;
@@ -42,7 +42,8 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf((csrf) -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/auth").permitAll()
                         .requestMatchers("/registration").permitAll()
